@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Paper, IconButton, InputLabel, Select, FormControl, MenuItem, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
-import UpdateAgence from "./UpdateAgence";
+import UpdateAgent from "./UpdateAgent";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import * as XLSX from "xlsx";
 import { getData, update, add, deletee } from "../../api/Produits";
-import AddAgence from "./AddAgence";
+import AddAgent from "./AddAgent";
 import { useSelector } from "react-redux";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from "@mui/lab";
@@ -19,7 +19,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 
-const GestionAgence = () => {
+const GestionAgent = () => {
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
     const [data, setData] = useState([]);
@@ -29,9 +29,9 @@ const GestionAgence = () => {
     const [selectedApproved, setSelectedApproved] = useState("");
     const [searchText, setSearchText] = useState("");
 
-    const [open, setOpen] = useState(false); // Pour AddAgence
+    const [open, setOpen] = useState(false); // Pour AddAgent
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [agenceToDelete, setAgenceToDelete] = useState(null); // Contient id + usernamename
+    const [agentToDelete, setAgentToDelete] = useState(null); // Contient id + usernamename
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState('');
@@ -66,11 +66,12 @@ const GestionAgence = () => {
         setLoading(true);
         setError(null);
         try {
-            const result = await getData("agence");
+            console.log("Fetching data agent...");
+            const result = await getData("agent");
             console.log("Data fetched:", result);
 
-            // Si l'utilisateur est "agence", filtrer les résultats selon son username
-            if (user?.role === "agence") {
+            // Si l'utilisateur est "agent", filtrer les résultats selon son username
+            if (user?.role === "agent") {
                 const filtered = result.filter(item => item.Agent === user.username);
                 setData(filtered);
             } else {
@@ -94,9 +95,9 @@ const GestionAgence = () => {
 
     const handleUpdate = async (updatedRow) => {
         try {
-            const result = await update(updatedRow, 'agence');
+            const result = await update(updatedRow, 'agent');
             if (result.success) {
-                getData('agence').then(setData);  // Rafraîchir les données
+                getData('agent').then(setData);  // Rafraîchir les données
                 setOpenDialog(false);
             } else {
                 setSnackbarMessage(result.message || 'Erreur de connexion');
@@ -112,10 +113,10 @@ const GestionAgence = () => {
     const handleAdd = async (updatedRow) => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
-            const result = await add(newRow, 'agence');
+            const result = await add(newRow, 'agent');
             console.log("result", result); // Debugging line
             if (result.success) {
-                const updatedData = await getData('agence');
+                const updatedData = await getData('agent');
                 setData(updatedData);
                 setOpenDialog(false);
             } else {
@@ -129,7 +130,7 @@ const GestionAgence = () => {
     };
 
     const handleDelete = (id) => {
-        setAgenceToDelete({ id });
+        setAgentToDelete({ id });
         setDeleteDialogOpen(true);
     };
 
@@ -137,12 +138,11 @@ const GestionAgence = () => {
     const handleConfirmDelete = async () => {
         setDeleteLoading(true);
 
-        if (!agenceToDelete) return;
-
+        if (!agentToDelete) return;
         try {
-            const result = await deletee(agenceToDelete, 'agence');
+            const result = await deletee(agentToDelete, 'agent');
             if (result.success) {
-                const updatedData = data.filter((item) => item.id !== agenceToDelete.id);
+                const updatedData = data.filter((item) => item.id !== agentToDelete.id);
                 setData(updatedData);
             } else {
                 setSnackbarMessage(result.message || 'Erreur de connexion');
@@ -154,17 +154,17 @@ const GestionAgence = () => {
         } finally {
             setDeleteLoading(false);
             setDeleteDialogOpen(false);
-            setAgenceToDelete(null);
+            setAgentToDelete(null);
         }
     };
 
     const handleExportExcel = () => {
         const worksheet = XLSX.utils.json_to_sheet(filteredData);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Agences");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Agents");
 
         // Générer un fichier Excel et le télécharger
-        XLSX.writeFile(workbook, "agences_export.xlsx");
+        XLSX.writeFile(workbook, "agents_export.xlsx");
     };
 
 
@@ -204,7 +204,7 @@ const GestionAgence = () => {
             <Box sx={{ display: "flex", margin: "auto", bgcolor: "#fff", width: "100%", height: "100%", borderRadius: "8px", overflow: "hidden", m: 1 }}>
                 <Box sx={{ width: "100%", margin: "auto", mt: 4, pl: 1, pr: 1 }}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                        <Typography variant="h5" fontWeight="bold">Gestion des agences</Typography>
+                        <Typography variant="h5" fontWeight="bold">Gestion des agents</Typography>
 
                         <Box display="flex" gap={2}>
                             {(user.role === "admin") && (
@@ -330,13 +330,13 @@ const GestionAgence = () => {
                         </Box>
                     )}
 
-                    {/* AddAgence Dialog */}
-                    <AddAgence open={open} handleClose={() => setOpen(false)} onAdd={handleAdd} />
+                    {/* AddAgent Dialog */}
+                    <AddAgent open={open} handleClose={() => setOpen(false)} onAdd={handleAdd} />
                     {selectedRow && (
-                        <UpdateAgence
+                        <UpdateAgent
                             open={openDialog}
                             handleClose={() => setOpenDialog(false)}
-                            agenceData={selectedRow}
+                            agentData={selectedRow}
                             onUpdate={handleUpdate}
                         />
                     )}
@@ -344,7 +344,7 @@ const GestionAgence = () => {
                     <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                         <DialogTitle>Confirmation de suppression</DialogTitle>
                         <DialogContent>
-                            <Typography>Voulez-vous vraiment supprimer la commande <strong>{agenceToDelete?.id}</strong> ?</Typography>
+                            <Typography>Voulez-vous vraiment supprimer la commande <strong>{agentToDelete?.id}</strong> ?</Typography>
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => setDeleteDialogOpen(false)} color="primary">Annuler</Button>
@@ -376,7 +376,7 @@ const GestionAgence = () => {
     );
 };
 
-export default GestionAgence;
+export default GestionAgent;
 
 
 

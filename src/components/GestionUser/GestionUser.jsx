@@ -217,7 +217,7 @@ const GestionUser = () => {
                         >
                             <MenuItem value="">Tous</MenuItem>
                             <MenuItem value="admin">Admin</MenuItem>
-                            <MenuItem value="agence">Agence</MenuItem>
+                            <MenuItem value="agent">Agent</MenuItem>
                             {/* Ajouter d'autres rôles si nécessaire */}
                         </TextField>
 

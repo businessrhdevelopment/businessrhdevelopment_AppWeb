@@ -13,7 +13,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 
 
-const UpdateAgence = ({ open, handleClose, agenceData, onUpdate }) => {
+const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
 
     const [loading, setLoading] = useState(false);
 
@@ -32,10 +32,10 @@ const UpdateAgence = ({ open, handleClose, agenceData, onUpdate }) => {
     });
 
     useEffect(() => {
-        if (agenceData) {
-            setFormData({ ...agenceData });
+        if (agentData) {
+            setFormData({ ...agentData });
         }
-    }, [agenceData]);
+    }, [agentData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -72,7 +72,7 @@ const UpdateAgence = ({ open, handleClose, agenceData, onUpdate }) => {
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-            <DialogTitle align="center">Modifier l'agence</DialogTitle>
+            <DialogTitle align="center">Modifier la commande</DialogTitle>
             <DialogContent>
                 <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={1}>
                     <TextField
@@ -170,4 +170,4 @@ const UpdateAgence = ({ open, handleClose, agenceData, onUpdate }) => {
     );
 };
 
-export default UpdateAgence;
+export default UpdateAgent;

@@ -42,7 +42,7 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
         }
     };
 
-    const roleOptions = ["admin", "agence"];
+    const roleOptions = ["admin", "agent"];
     const approvedOptions = ["yes", "no"];
 
     return (

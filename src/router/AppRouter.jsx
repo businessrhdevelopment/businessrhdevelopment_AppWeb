@@ -6,7 +6,7 @@ import MainLayout from '../components/MainLayout';
 import SignIn from '../components/Oauth2/Login';
 import Dashboard from '../components/Dashboard/Dashboard';
 import GestionUser from '../components/GestionUser/GestionUser';
-import GestionAgence from '../components/GestionAgence/GestionAgence';
+import GestionAgent from '../components/GestionAgent/GestionAgent';
 
 import { setUser } from '../redux/Slices/userSlice';
 import ProtectedRoute from './ProtectedRoute'; // importe le nouveau composant
@@ -63,7 +63,7 @@ const AppRouter = () => {
                     <GestionUser />
                   </ProtectedRoute>
                 }
-              />              <Route path="gestion-agence" element={<GestionAgence />} />
+              />              <Route path="gestion-agent" element={<GestionAgent />} />
             </Route>
             <Route path="/login" element={<Navigate to="/" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />

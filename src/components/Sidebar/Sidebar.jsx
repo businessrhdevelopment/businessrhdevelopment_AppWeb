@@ -9,7 +9,7 @@ import { ExitToApp } from '@mui/icons-material';
 import { logout } from "../../redux/Slices/userSlice"; 
 import { useDispatch, useSelector } from "react-redux";
 import { loogout } from "../../api/Produits";
-import BusinessIcon from '@mui/icons-material/Business'; // Pour agences
+import BusinessIcon from '@mui/icons-material/Business'; // Pour agents
 import GroupIcon from '@mui/icons-material/Group'; // Pour utilisateurs
 import { LoadingButton } from "@mui/lab";
 
@@ -50,9 +50,9 @@ const Sidebar = () => {
 
   const menuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
-    { text: "Gestion des agences", icon: <BusinessIcon />, path: "/gestion-agence" },
-    // N'affiche "Gestion des utilisateurs" que si le rôle n'est pas "agence"
-    ...(user?.role !== "agence"
+    { text: "Gestion des agents", icon: <BusinessIcon />, path: "/gestion-agent" },
+    // N'affiche "Gestion des utilisateurs" que si le rôle n'est pas "agent"
+    ...(user?.role !== "agent"
       ? [{ text: "Gestion des utilisateurs", icon: <GroupIcon />, path: "/gestion-user" }]
       : [])
   ];
@@ -153,9 +153,7 @@ const Sidebar = () => {
                     <Button onClick={handleConfirmLogout} color="error" autoFocus>Oui</Button>
                 </DialogActions>
             </Dialog>
-              {/* <Box sx={{ p: 1, textAlign: "center", cursor: "pointer" }} >
-<p>Bonjour {user.name}</p>
-      </Box> */}
+
     </Drawer>
   );
 };

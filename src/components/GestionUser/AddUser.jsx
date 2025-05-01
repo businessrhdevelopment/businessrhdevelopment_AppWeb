@@ -61,7 +61,7 @@ const AddUser = ({ open, handleClose, onAdd }) => {
     };
 
 
-    const roleOptions = ["admin", "agence"];
+    const roleOptions = ["admin", "agent"];
     const approvedOptions = ["yes", "no"];
 
     return (

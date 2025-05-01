@@ -110,10 +110,27 @@ export default function SignIn(props) {
 
       if (result.success) {
         const decoded = JSON.parse(atob(result.token.split('.')[1]));
+      
+        // 1. Date actuelle
+        const now = new Date();
+        console.log('Date actuelle (now):', now.toISOString());
+      
+        // 2. Date d'expiration du token
+        const expTimestamp = decoded.exp * 1000; // convertir en ms
+        const expDate = new Date(expTimestamp);
+        console.log('Date d\'expiration (exp):', expDate.toISOString());
+      
+        // 3. Différence en minutes
+        const diffMs = expTimestamp - now.getTime();
+        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+        console.log(`Différence (exp - now) : ${diffMinutes} minutes`);
+      
+        // Enregistrement et redirection
         localStorage.setItem('user', JSON.stringify(decoded));
         dispatch(setUser(decoded));
         navigate('/');
-      } else {
+      }
+       else {
         setSnackbarMessage(result.message || 'Erreur de connexion');
         setSnackbarSeverity('error');
         setOpenSnackbar(true);

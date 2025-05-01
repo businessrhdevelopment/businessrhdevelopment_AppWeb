@@ -13,7 +13,7 @@ const backgroundColors = ["red", "#FAAD14", "#1890FF", "#18794E"];
 const hoverColors = ["red", "#FAAD14", "#1890FF", "#18794E"];
 
 const Dashboard = () => {
-  const [agenceData, setAgenceData] = useState({});
+  const [agentData, setAgentData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const user = useSelector(state => state.user.user)
@@ -24,13 +24,13 @@ const Dashboard = () => {
 const loadData = async () => {
   setLoading(true);
   try {
-    const result = await getData("agenceSttus");
+    const result = await getData("agentStatus");
 
-    if (user.role === "agence") {
+    if (user.role === "agent") {
       const filtered = result.filter(item => item.username === user.username);
-      setAgenceData(filtered);
+      setAgentData(filtered);
     } else {
-      setAgenceData(result); // Pour admin
+      setAgentData(result); // Pour admin
     }
 
   } catch (err) {
@@ -66,8 +66,8 @@ const loadData = async () => {
         padding: 4,
       }}
     >
-{agenceData.map((agence, index) => {
-  const { username, ...statusCounts } = agence;
+{agentData.map((agent, index) => {
+  const { username, ...statusCounts } = agent;
   const taskStates = Object.keys(statusCounts);
   const doughnutData = {
     labels: taskStatesFixed,

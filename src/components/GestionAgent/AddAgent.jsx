@@ -14,7 +14,7 @@ import { LoadingButton } from "@mui/lab";
 
 import { getData } from "../../api/Produits"; // <-- ajuste le chemin si nécessaire
 
-const AddAgence = ({ open, handleClose, onAdd }) => {
+const AddAgent = ({ open, handleClose, onAdd }) => {
     const [newData, setNewData] = useState({
         id: "",
         DATE: "",
@@ -38,10 +38,10 @@ const AddAgence = ({ open, handleClose, onAdd }) => {
         const fetchAgents = async () => {
             try {
                 const users = await getData("user");
-                const agences = users
-                    .filter((user) => user.role === "agence" && user.Approved === "yes")
+                const agents = users
+                    .filter((user) => user.role === "agent" && user.Approved === "yes")
                     .map((user) => user.username);
-                setAgentOptions(agences);
+                setAgentOptions(agents);
             } catch (error) {
                 console.error("Erreur lors du chargement des agents :", error);
             }
@@ -102,7 +102,7 @@ const AddAgence = ({ open, handleClose, onAdd }) => {
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-            <DialogTitle align="center">Ajouter une agence</DialogTitle>
+            <DialogTitle align="center">Ajouter une commande</DialogTitle>
             <DialogContent sx={{ "&.MuiDialogContent-root": { paddingTop: "10px" } }}>
                                 <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={1}>
                                 <TextField
@@ -212,4 +212,4 @@ const AddAgence = ({ open, handleClose, onAdd }) => {
     );
 };
 
-export default AddAgence;
+export default AddAgent;
