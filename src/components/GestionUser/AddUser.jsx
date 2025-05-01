@@ -10,11 +10,14 @@ import {
     MenuItem,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import { useSelector } from "react-redux";
 
 
 const AddUser = ({ open, handleClose, onAdd }) => {
 
     const [loading, setLoading] = useState(false);
+    const user = useSelector(state => state.user.user)
+    
 
 
     const [newData, setNewData] = useState({
@@ -68,7 +71,7 @@ const AddUser = ({ open, handleClose, onAdd }) => {
             sx={{ "& .MuiDialog-paper": { width: "35%" } }}
         >
 
-            <DialogTitle>Ajouter un utilisateur</DialogTitle>
+            <DialogTitle align="center">Ajouter un utilisateur</DialogTitle>
             <DialogContent sx={{ "&.MuiDialogContent-root": { paddingTop: "10px" } }}>
                 <Grid container spacing={2} direction="column">
                     <Grid item>
@@ -90,38 +93,43 @@ const AddUser = ({ open, handleClose, onAdd }) => {
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Role"
-                            value={newData.role}
-                            onChange={(e) => handleChange("role", e.target.value)}
-                            variant="outlined"
-                        >
-                            {roleOptions.map((role) => (
-                                <MenuItem key={role} value={role}>
-                                    {role}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </Grid>
-                    <Grid item>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Approved"
-                            value={newData.Approved}
-                            onChange={(e) => handleChange("Approved", e.target.value)}
-                            variant="outlined"
-                        >
-                            {approvedOptions.map((option) => (
-                                <MenuItem key={option} value={option}>
-                                    {option}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </Grid>
+                    {newData.role !== "admin" && (
+                        <>
+                                            <Grid item>
+                                            <TextField
+                                                select
+                                                fullWidth
+                                                label="Role"
+                                                value={newData.role}
+                                                onChange={(e) => handleChange("role", e.target.value)}
+                                                variant="outlined"
+                                            >
+                                                {roleOptions.map((role) => (
+                                                    <MenuItem key={role} value={role}>
+                                                        {role}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                select
+                                                fullWidth
+                                                label="Approved"
+                                                value={newData.Approved}
+                                                onChange={(e) => handleChange("Approved", e.target.value)}
+                                                variant="outlined"
+                                            >
+                                                {approvedOptions.map((option) => (
+                                                    <MenuItem key={option} value={option}>
+                                                        {option}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        </>
+                    )}
+
 
                 </Grid>
             </DialogContent>

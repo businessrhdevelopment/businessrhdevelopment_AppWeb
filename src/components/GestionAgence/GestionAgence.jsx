@@ -247,7 +247,7 @@ const GestionAgence = () => {
 
                         <TextField
                             fullWidth
-                            label="Recherche par statut"
+                            label="Recherche"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                             placeholder="Tapez un mot-clé..."

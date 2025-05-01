@@ -102,7 +102,7 @@ const AddAgence = ({ open, handleClose, onAdd }) => {
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-            <DialogTitle>Ajouter une agence</DialogTitle>
+            <DialogTitle align="center">Ajouter une agence</DialogTitle>
             <DialogContent sx={{ "&.MuiDialogContent-root": { paddingTop: "10px" } }}>
                                 <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={1}>
                                 <TextField

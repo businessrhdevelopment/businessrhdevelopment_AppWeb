@@ -10,10 +10,12 @@ import {
     MenuItem,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import { useSelector } from "react-redux";
 
 const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
     const [loading, setLoading] = useState(false);
-    
+    const user = useSelector(state => state.user.user)
+
     const [updatedData, setUpdatedData] = useState({ ...userData });
 
     useEffect(() => {
@@ -49,7 +51,7 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
             onClose={handleClose}
             sx={{ "& .MuiDialog-paper": { width: "35%" } }}
         >
-            <DialogTitle>Modifier un utilisateur</DialogTitle>
+            <DialogTitle align="center">Modifier un utilisateur</DialogTitle>
             <DialogContent sx={{ "&.MuiDialogContent-root": { paddingTop: "10px" } }}>
                 <Grid container spacing={2} direction="column">
                     <Grid item>
@@ -71,7 +73,9 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item>
+
+                    {updatedData.role !== "admin" && (<>
+                        <Grid item>
                         <TextField
                             select
                             fullWidth
@@ -103,6 +107,9 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
                             ))}
                         </TextField>
                     </Grid>
+                    
+                    </>)}
+
                 </Grid>
             </DialogContent>
             <DialogActions>

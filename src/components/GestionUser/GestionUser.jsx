@@ -260,8 +260,10 @@ const GestionUser = () => {
                                                 <TableCell>{row.id}</TableCell>
                                                 <TableCell>{row.username}</TableCell>
                                                 <TableCell>{row.password}</TableCell>
-                                                <TableCell>{row.role}</TableCell>
-                                                <TableCell>{row.Approved}</TableCell>
+                                                <TableCell >{row.role}</TableCell>
+                                                <TableCell>
+                                                    <span style={getRoleStyle(row.Approved)}>{row.Approved}</span>
+                                                </TableCell>
                                                 <TableCell>
                                                     <IconButton
                                                         sx={{ color: "#1976d2" }}
@@ -272,12 +274,14 @@ const GestionUser = () => {
                                                     >
                                                         <EditIcon />
                                                     </IconButton>
+
+                                                    {row.role !== "admin" && (
                                                     <IconButton
                                                         sx={{ color: "#d32f2f" }}
                                                         onClick={() => handleDelete(row.id, row.username)}
                                                     >
                                                         <DeleteIcon />
-                                                    </IconButton>
+                                                    </IconButton>)}
                                                 </TableCell>
 
                                             </TableRow>
@@ -343,7 +347,7 @@ export default GestionUser;
 
 
 
-const getStatusStyle = (status) => {
+const getRoleStyle = (status) => {
     if (typeof status !== "string") {
         return {};
     }
@@ -351,13 +355,13 @@ const getStatusStyle = (status) => {
     const trimmedStatus = status.trim();
     if (trimmedStatus === "En cours") {
         return { backgroundColor: "#FFE084", color: "#F3A61C", padding: "4px 10px", borderRadius: "10px" };
-    } else if (trimmedStatus === "Terminé") {
+    } else if (trimmedStatus === "yes") {
         return { backgroundColor: "#D1FADF", color: "#18794E", padding: "4px 10px", borderRadius: "10px" };
     } else if (trimmedStatus === "pas démarré") {
         return { backgroundColor: "#D0E7FF", color: "#0056B3", padding: "4px 10px", borderRadius: "10px" };
     } else if (trimmedStatus === "na") {
         return { backgroundColor: "#E0E0E0", color: "#9E9E9E", padding: "4px 10px", borderRadius: "10px" };
-    } else if (trimmedStatus === "bloqué") {
+    } else if (trimmedStatus === "no") {
         return { backgroundColor: "#FCD7E3", color: "#B42318", padding: "4px 10px", borderRadius: "10px" };
     }
 

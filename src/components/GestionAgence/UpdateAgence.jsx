@@ -72,7 +72,7 @@ const UpdateAgence = ({ open, handleClose, agenceData, onUpdate }) => {
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-            <DialogTitle>Modifier l'agence</DialogTitle>
+            <DialogTitle align="center">Modifier l'agence</DialogTitle>
             <DialogContent>
                 <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={1}>
                     <TextField
