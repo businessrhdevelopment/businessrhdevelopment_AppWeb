@@ -26,7 +26,7 @@ const GestionAgent = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedStatut, setSelectedStatut] = useState("");
-    const [selectedApproved, setSelectedApproved] = useState("");
+    const [selectedAgent, setSelectedAgent] = useState("");
     const [searchText, setSearchText] = useState("");
 
     const [open, setOpen] = useState(false); // Pour AddAgent
@@ -43,24 +43,27 @@ const GestionAgent = () => {
 
     const user = useSelector(state => state.user.user)
 
+
+
     const filteredData = useMemo(() => {
         return data.filter((row) => {
             const statutValue = row["Statut"] ? row["Statut"].toString().toLowerCase() : "";
+            const agentValue = row["Agent"] ? row["Agent"].toString().toLowerCase() : "";
             const selectedStatutValue = selectedStatut ? selectedStatut.toString().toLowerCase() : "";
+            const selectedAgentValue = selectedAgent ? selectedAgent.toString().toLowerCase() : "";
 
-            // Vérifie si le statut correspond au filtre sélectionné, sinon ignore ce critère
             const matchesStatut = selectedStatutValue ? statutValue === selectedStatutValue : true;
+            const matchesAgent = selectedAgentValue ? agentValue === selectedAgentValue : true;
 
-            // Vérifie si n'importe quelle colonne contient le texte de recherche
-            const matchesSearch = searchText
-                ? Object.values(row).some(value => value.toString().toLowerCase().includes(searchText.toLowerCase()))
-                : true;
-
-            return matchesStatut && matchesSearch;
+            return matchesStatut && matchesAgent;
         });
-    }, [data, selectedStatut, searchText]);
+    }, [data, selectedStatut, selectedAgent]);
 
 
+    const agentList = useMemo(() => {
+        const uniqueAgents = new Set(data.map(row => row.Agent).filter(Boolean));
+        return Array.from(uniqueAgents);
+    }, [data]);
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -158,14 +161,7 @@ const GestionAgent = () => {
         }
     };
 
-    const handleExportExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(filteredData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Agents");
 
-        // Générer un fichier Excel et le télécharger
-        XLSX.writeFile(workbook, "agents_export.xlsx");
-    };
 
 
 
@@ -218,13 +214,7 @@ const GestionAgent = () => {
                                     Ajouter une commande
                                 </Button>)}
 
-                            <Button
-                                variant="outlined"
-                                color="success"
-                                onClick={handleExportExcel}
-                            >
-                                Exporter Excel
-                            </Button>
+
                         </Box>
 
                     </Box>
@@ -242,16 +232,32 @@ const GestionAgent = () => {
                             <MenuItem value="Injoignable">Injoignable</MenuItem>
                             <MenuItem value="Livraison">Livraison</MenuItem>
                             <MenuItem value="Livrée">Livrée </MenuItem>
+                            <MenuItem value="Annulation à la livraison">Annulation à la livraison</MenuItem>
                             {/* Ajouter d'autres rôles si nécessaire */}
                         </TextField>
 
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             label="Recherche"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                             placeholder="Tapez un mot-clé..."
-                        />
+                        /> */}
+                        <TextField
+                            fullWidth
+                            select
+                            label="Agent"
+                            value={selectedAgent}
+                            onChange={(e) => setSelectedAgent(e.target.value)}
+                        >
+                            <MenuItem value="">Tous</MenuItem>
+                            {agentList.map((agentName, idx) => (
+                                <MenuItem key={idx} value={agentName}>
+                                    {agentName}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+
 
                     </Box>
 
@@ -268,7 +274,7 @@ const GestionAgent = () => {
                                         overflow: "hidden", textOverflow: "ellipsis", maxWidth: "200px",
                                     }}>
                                         <TableRow>
-                                            {["id", "DATE", "Nom", "CP", "Commande", "Livraison", "Statut", "Annulation", "Agent", "Total"]
+                                            {["id", "DATE", "Nom", "CP", "Commande", "Livraison", "Statut", "Commentaire", "Agent", "Total"]
                                                 .map(header => (
                                                     <TableCell key={header} sx={{ color: "#fff", fontWeight: "bold", position: "sticky", top: 0, backgroundColor: "#000", zIndex: 10 }}>
                                                         {header}
@@ -297,7 +303,7 @@ const GestionAgent = () => {
                                                     <span style={getStatusStyle(row.Statut)}>{row.Statut}</span>
                                                 </TableCell>
 
-                                                <TableCell>{row.Annulation}</TableCell>
+                                                <TableCell>{row.Commentaire}</TableCell>
                                                 <TableCell>{row.Agent}</TableCell>
                                                 <TableCell>{row.Total}</TableCell>
                                                 {user.role === "admin" && (
@@ -397,8 +403,26 @@ const getStatusStyle = (status) => {
             return { backgroundColor: "#D0E7FF", color: "#0056B3", padding: "4px 10px", borderRadius: "10px" };
         case "Livrée":
             return { backgroundColor: "#D1FADF", color: "#18794E", padding: "4px 10px", borderRadius: "10px" };
+        case "Annulation à la livraison":
+            return { backgroundColor: "#FFE4E4", color: "#B42318", padding: "4px 10px", borderRadius: "10px" };
         default:
             return {};
     }
 };
 
+// const filteredData = useMemo(() => {
+//     return data.filter((row) => {
+//         const statutValue = row["Statut"] ? row["Statut"].toString().toLowerCase() : "";
+//         const selectedStatutValue = selectedStatut ? selectedStatut.toString().toLowerCase() : "";
+
+//         // Vérifie si le statut correspond au filtre sélectionné, sinon ignore ce critère
+//         const matchesStatut = selectedStatutValue ? statutValue === selectedStatutValue : true;
+
+//         // Vérifie si n'importe quelle colonne contient le texte de recherche
+//         const matchesSearch = searchText
+//             ? Object.values(row).some(value => value.toString().toLowerCase().includes(searchText.toLowerCase()))
+//             : true;
+
+//         return matchesStatut && matchesSearch;
+//     });
+// }, [data, selectedStatut, searchText]);

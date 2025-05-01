@@ -23,13 +23,13 @@ const AddAgent = ({ open, handleClose, onAdd }) => {
         Commande: "",
         Livraison: "",
         Statut: "",
-        Annulation: "",
+        Commentaire: "",
         Agent: "",
         Total: ""
     });
 
     const [agentOptions, setAgentOptions] = useState([]);
-    const statutOptions = ["Conf KO", "Injoignable", "Livraison", "Livrée"];
+    const statutOptions = ["Conf KO", "Injoignable", "Livraison", "Livrée","Annulation à la livraison"];
     const [loading, setLoading] = useState(false);
 
 
@@ -74,7 +74,7 @@ const AddAgent = ({ open, handleClose, onAdd }) => {
                 Commande: "",
                 Livraison: "",
                 Statut: "",
-                Annulation: "",
+                Commentaire: "",
                 Agent: "",
                 Total: ""
             });
@@ -159,9 +159,9 @@ const AddAgent = ({ open, handleClose, onAdd }) => {
                         </TextField>
                         <TextField
                             fullWidth
-                            label="Annulation"
-                            value={newData.Annulation}
-                            onChange={(e) => handleChange("Annulation", e.target.value)}
+                            label="Commentaire"
+                            value={newData.Commentaire}
+                            onChange={(e) => handleChange("Commentaire", e.target.value)}
                             variant="outlined"
                         />
 

@@ -25,7 +25,7 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
         Commande: "",
         Livraison: "",
         Statut: "",
-        Annulation: "",
+        Commentaire: "",
         Agent: "",
         Total: "",
         Approved: "",
@@ -129,11 +129,12 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
                         <MenuItem value="Injoignable">Injoignable</MenuItem>
                         <MenuItem value="Livraison">Livraison</MenuItem>
                         <MenuItem value="Livrée">Livrée</MenuItem>
+                        <MenuItem value="Annulation à la livraison">Annulation à la livraison</MenuItem>
                     </TextField>
                     <TextField
-                        name="Annulation"
-                        label="Annulation"
-                        value={formData.Annulation || ""}
+                        name="Commentaire"
+                        label="Commentaire"
+                        value={formData.Commentaire || ""}
                         onChange={handleChange}
                     />
                     <TextField
