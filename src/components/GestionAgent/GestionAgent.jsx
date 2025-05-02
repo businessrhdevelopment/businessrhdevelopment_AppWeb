@@ -335,7 +335,7 @@ const exportToExcel = (data, fileName = 'export_agents') => {
         return () => {
             window.removeEventListener("resize", updateHeight);
         };
-    }, [updateHeight]);
+    }, []);
 
 
     return (
