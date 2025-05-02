@@ -42,6 +42,22 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
         }
     };
 
+    const handleCancel = () => {
+        setUpdatedData({
+            id: "",
+            DATE: "",
+            Nom: "",
+            CP: "",
+            Commande: "",
+            Livraison: "",
+            Statut: "",
+            Commentaire: "",
+            Agent: "",
+            Total: ""
+        });
+        handleClose();
+    };
+
     const roleOptions = ["admin", "agent"];
     const approvedOptions = ["yes", "no"];
 
@@ -113,7 +129,7 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="secondary">
+                <Button onClick={handleCancel} color="primary">
                     Annuler
                 </Button>
                 <LoadingButton

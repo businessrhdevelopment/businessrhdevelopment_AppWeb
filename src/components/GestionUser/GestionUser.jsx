@@ -141,14 +141,7 @@ const GestionUser = () => {
 
 
 
-    const handleExportExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(filteredData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "User");
-    
-        // Générer un fichier Excel et le télécharger
-        XLSX.writeFile(workbook, "users_export.xlsx");
-    };
+
     
 
 
@@ -197,13 +190,7 @@ const GestionUser = () => {
                                 Ajouter un utilisateur
                             </Button>
                         )}
-                                    <Button
-                variant="outlined"
-                color="success"
-                onClick={handleExportExcel}
-            >
-                Exporter Excel
-            </Button>
+
         </Box>
                     </Box>
 

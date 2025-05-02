@@ -60,6 +60,17 @@ const AddUser = ({ open, handleClose, onAdd }) => {
         }
     };
 
+    const handleCancel = () => {
+        setNewData({
+            id: "",
+            username: "",
+            password: "",
+            role: "",
+            Approved: "",
+            connexion: ""
+        });
+        handleClose();
+    };
 
     const roleOptions = ["admin", "agent"];
     const approvedOptions = ["yes", "no"];
@@ -135,7 +146,7 @@ const AddUser = ({ open, handleClose, onAdd }) => {
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={handleClose} color="secondary">
+                <Button onClick={handleCancel} color="primary">
                     Annuler
                 </Button>
                 <LoadingButton

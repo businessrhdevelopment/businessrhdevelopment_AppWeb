@@ -47,7 +47,20 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            await onUpdate(formData);
+            console.log("FormData avant formatage :", formData.DATE);
+            const formattedDate = formatDateToDDMMYYYY(formData.DATE);
+            const formattedLivraison = formatDateToDDMMYYYY(formData.Livraison); // Formatage de la date de livraison
+
+
+
+            const updatedFormData = {
+                ...formData,
+                DATE: formattedDate,
+                Livraison: formattedLivraison, // Ajout de la date de livraison formatée
+            };
+
+            console.log("FormData à envoyer :", updatedFormData);
+            await onUpdate(updatedFormData);
             handleClose();
         } catch (error) {
             console.error("Erreur lors de la mise à jour :", error);
@@ -57,42 +70,59 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
     };
 
 
-    const convertToInputDate = (dateStr) => {
-        if (!dateStr) return "";
-        const [dd, mm, yyyy] = dateStr.split("-");
-        return `${yyyy}-${mm}-${dd}`;
+
+
+    function formatDateToDDMMYYYY(input) {
+        if (!input) return "";
+      
+        // Supporte un objet Date ou une string ISO
+        const date = new Date(input);
+        if (isNaN(date.getTime())) return ""; // gestion des dates invalides
+      
+        const dd = String(date.getDate()).padStart(2, "0");
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const yyyy = date.getFullYear();
+      
+        return `${dd}-${mm}-${yyyy}`;
+      }
+
+      const handleCancel = () => {
+        setFormData({
+            id: "",
+            DATE: "",
+            Nom: "",
+            CP: "",
+            Commande: "",
+            Livraison: "",
+            Statut: "",
+            Commentaire: "",
+            Agent: "",
+            Total: ""
+        });
+        handleClose();
     };
 
-    // Convertit yyyy-mm-dd → dd-mm-yyyy (au changement)
-    const convertToDisplayDate = (isoDateStr) => {
-        if (!isoDateStr) return "";
-        const [yyyy, mm, dd] = isoDateStr.split("-");
-        return `${dd}-${mm}-${yyyy}`;
-    };
+
+
+
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
             <DialogTitle align="center">Modifier la commande</DialogTitle>
             <DialogContent>
                 <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={1}>
+
+
                     <TextField
                         name="DATE"
                         label="DATE"
                         type="date"
                         InputLabelProps={{ shrink: true }}
-                        value={convertToInputDate(formData.DATE)}
-                        onChange={(e) => {
-                            const converted = convertToDisplayDate(e.target.value);
-                            const fakeEvent = {
-                                target: {
-                                    name: "DATE",
-                                    value: converted,
-                                },
-                            };
-                            handleChange(fakeEvent);
-                        }}
-
+                        value={formData.DATE}
+                        onChange={handleChange}
                     />
+
+
 
                     <TextField
                         name="Nom"
@@ -112,10 +142,18 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
                         value={formData.Commande || ""}
                         onChange={handleChange}
                     />
-                    <TextField
+                    {/* <TextField
                         name="Livraison"
                         label="Livraison"
                         value={formData.Livraison || ""}
+                        onChange={handleChange}
+                    /> */}
+                    <TextField
+                        name="Livraison"
+                        label="Livraison"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        value={formData.Livraison}
                         onChange={handleChange}
                     />
                     <TextField
@@ -154,7 +192,7 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleCancel} color="primary">
                     Annuler
                 </Button>
                 <LoadingButton

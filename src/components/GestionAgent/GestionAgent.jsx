@@ -164,6 +164,11 @@ const GestionAgent = () => {
 
 
 
+    const convertToInputDate = (dateStr) => {
+        if (!dateStr) return "";
+        const [dd, mm, yyyy] = dateStr.split("-");
+        return `${yyyy}-${mm}-${dd}`;
+    };
 
 
 
@@ -243,20 +248,23 @@ const GestionAgent = () => {
                             onChange={(e) => setSearchText(e.target.value)}
                             placeholder="Tapez un mot-clé..."
                         /> */}
-                        <TextField
-                            fullWidth
-                            select
-                            label="Agent"
-                            value={selectedAgent}
-                            onChange={(e) => setSelectedAgent(e.target.value)}
-                        >
-                            <MenuItem value="">Tous</MenuItem>
-                            {agentList.map((agentName, idx) => (
-                                <MenuItem key={idx} value={agentName}>
-                                    {agentName}
-                                </MenuItem>
-                            ))}
-                        </TextField>
+                        {user.role === "admin" && (
+                            <TextField
+                                fullWidth
+                                select
+                                label="Agent"
+                                value={selectedAgent}
+                                onChange={(e) => setSelectedAgent(e.target.value)}
+                            >
+                                <MenuItem value="">Tous</MenuItem>
+                                {agentList.map((agentName, idx) => (
+                                    <MenuItem key={idx} value={agentName}>
+                                        {agentName}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        )}
+
 
 
                     </Box>
@@ -342,10 +350,18 @@ const GestionAgent = () => {
                         <UpdateAgent
                             open={openDialog}
                             handleClose={() => setOpenDialog(false)}
-                            agentData={selectedRow}
+                            agentData={{
+                                ...selectedRow,
+                                DATE: convertToInputDate(selectedRow?.DATE),
+                                Livraison: convertToInputDate(selectedRow?.Livraison),
+                            }}
                             onUpdate={handleUpdate}
                         />
+
                     )}
+
+
+
                     {/* Boîte de dialogue de confirmation */}
                     <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                         <DialogTitle>Confirmation de suppression</DialogTitle>
