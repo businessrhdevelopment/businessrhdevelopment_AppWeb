@@ -11,6 +11,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from "@mui/lab";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import AddIcon from '@mui/icons-material/Add';
+
 
 
 
@@ -183,7 +185,7 @@ const GestionUser = () => {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                startIcon={<CloudUploadIcon />}
+                                startIcon={<AddIcon />}
                                 onClick={() => setOpen(true)}
                             >
                                 Ajouter un utilisateur

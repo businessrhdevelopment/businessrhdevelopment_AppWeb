@@ -11,6 +11,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from "@mui/lab";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import AddIcon from '@mui/icons-material/Add';
 
 
 
@@ -25,6 +27,8 @@ const GestionAgent = () => {
     const [selectedRow, setSelectedRow] = useState(null);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loading1, setLoading1] = useState(false);
+
     const [error, setError] = useState(null);
     const [selectedStatut, setSelectedStatut] = useState("");
     const [selectedAgent, setSelectedAgent] = useState("");
@@ -175,7 +179,7 @@ const GestionAgent = () => {
 
     // Importer un fichier Excel et envoyer les données
     const handleFileUpload = (event) => {
-        setLoading(true);
+        setLoading1(true);
 
         const file = event.target.files?.[0];
         if (!file) return;
@@ -240,7 +244,7 @@ const GestionAgent = () => {
             } catch (error) {
                 console.error("Erreur lors de l'import:", error);
             } finally {
-                setLoading(false);
+                setLoading1(false);
             }
 
             event.target.value = "";
@@ -276,6 +280,34 @@ const GestionAgent = () => {
     };
 
 
+    // Ajoutez cette fonction près de vos imports
+const exportToExcel = (data, fileName = 'export_agents') => {
+    // Créer un nouveau workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Préparer les données pour l'export
+    const exportData = data.map(row => ({
+      ID: row.id,
+      Date: row.DATE,
+      Nom: row.Nom,
+      'Code Postal': row.CP,
+      Commande: row.Commande,
+      Livraison: row.Livraison,
+      Statut: row.Statut,
+      Commentaire: row.Commentaire,
+      Agent: row.Agent,
+      Total: row.Total
+    }));
+  
+    // Créer une worksheet à partir des données
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    
+    // Ajouter la worksheet au workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Agents");
+    
+    // Générer le fichier Excel et le télécharger
+    XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  };
 
 
 
@@ -315,29 +347,45 @@ const GestionAgent = () => {
 
                         <Box display="flex" gap={2}>
                             {(user.role === "admin") && (
-
-                                <Button
+<>
+<Button
                                     variant="contained"
                                     color="primary"
-                                    startIcon={<CloudUploadIcon />}
+                                    startIcon={<AddIcon />}
                                     onClick={() => setOpen(true)}
                                 >
                                     Ajouter une commande
-                                </Button>)}
-
-                            {/* Bouton pour importer un fichier Excel */}
-
-
-                            <LoadingButton
+                                </Button>
+                                
+                                <LoadingButton
                                 component="label"
                                 variant="contained"
                                 color="primary"
                                 startIcon={<CloudUploadIcon />}
-                                loading={loading}
+                                loading={loading1}
                             >
                                 Importer un fichier Excel
                                 <input type="file" accept=".xls,.xlsx,.csv" hidden onChange={handleFileUpload} />
                             </LoadingButton>
+
+<Button 
+  variant="contained" 
+  color="success" 
+  onClick={() => exportToExcel(filteredData, 'agents_export')}
+  startIcon={<CloudDownloadIcon />}
+>
+  Exporter en Excel
+</Button>
+                            
+</>
+                               
+                            )   
+                                
+                                }
+
+
+
+
 
 
                         </Box>
