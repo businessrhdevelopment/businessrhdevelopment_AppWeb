@@ -13,6 +13,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 
 import { getData } from "../../api/Produits"; // <-- ajuste le chemin si nécessaire
+import { useSelector } from "react-redux";
 
 const AddAgent = ({ open, handleClose, onAdd }) => {
     const [newData, setNewData] = useState({
@@ -32,12 +33,14 @@ const AddAgent = ({ open, handleClose, onAdd }) => {
     const statutOptions = ["Conf KO", "Injoignable", "Livraison", "Livrée", "Annulation à la livraison"];
     const [loading, setLoading] = useState(false);
 
+        const user = useSelector(state => state.user.user)
+    
 
     // Chargement des usernames à l'ouverture du Dialog
     useEffect(() => {
         const fetchAgents = async () => {
             try {
-                const users = await getData("user");
+                const users = await getData("user",user.username);
                 const agents = users
                     .filter((user) => user.role === "agent" && user.Approved === "yes")
                     .map((user) => user.username);

@@ -3,7 +3,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Doughnut } from "react-chartjs-2";
 import { getData } from "../../api/Produits";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
@@ -22,11 +22,16 @@ const Dashboard = () => {
 
 
   const loadData = async () => {
+    console.log("user",user)
     setLoading(true);
     try {
-      const result = await getData("agentStatus");
-      console.log(result);
+      const result = await getData("agentStatus", user.username);
+      console.log("dashboard"+result);
 
+      if (!result){
+        setAgentData([]);
+        return;
+      } 
       if (user.role === "agent") {
         const filtered = result.filter(item => item.username === user.username);
         setAgentData(filtered);
@@ -55,7 +60,7 @@ const Dashboard = () => {
     );
   }
 
-  if (error) return <p>Erreur : {error}</p>;
+  if (error) return <Typography variant="body1" sx={{ textAlign: "center", mt: 2, color: "red" }}>{error}</Typography>;
 
   return (
     <Box

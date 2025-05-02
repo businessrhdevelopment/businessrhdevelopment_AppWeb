@@ -70,8 +70,10 @@ const GestionAgent = () => {
         setError(null);
         try {
             console.log("Fetching data agent...");
-            const result = await getData("agent");
+            const result = await getData("agent",user.username);
             console.log("Data fetched:", result);
+
+            if (!result) return;
 
             // Si l'utilisateur est "agent", filtrer les résultats selon son username
             if (user?.role === "agent") {
@@ -98,9 +100,9 @@ const GestionAgent = () => {
 
     const handleUpdate = async (updatedRow) => {
         try {
-            const result = await update(updatedRow, 'agent');
+            const result = await update(updatedRow, 'agent',user.username);
             if (result.success) {
-                getData('agent').then(setData);  // Rafraîchir les données
+                getData('agent',user.username).then(setData);  // Rafraîchir les données
                 setOpenDialog(false);
             } else {
                 setSnackbarMessage(result.message || 'Erreur de connexion');
@@ -116,10 +118,10 @@ const GestionAgent = () => {
     const handleAdd = async (updatedRow) => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
-            const result = await add(newRow, 'agent');
+            const result = await add(newRow, 'agent',user.username);
             console.log("result", result); // Debugging line
             if (result.success) {
-                const updatedData = await getData('agent');
+                const updatedData = await getData('agent',user.username);
                 setData(updatedData);
                 setOpenDialog(false);
             } else {
@@ -143,7 +145,7 @@ const GestionAgent = () => {
 
         if (!agentToDelete) return;
         try {
-            const result = await deletee(agentToDelete, 'agent');
+            const result = await deletee(agentToDelete, 'agent',user.username);
             if (result.success) {
                 const updatedData = data.filter((item) => item.id !== agentToDelete.id);
                 setData(updatedData);

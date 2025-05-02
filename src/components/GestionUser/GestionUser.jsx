@@ -58,8 +58,9 @@ const GestionUser = () => {
         setLoading(true);
         setError(null);
         try {
-            const result = await getData("user");
+            const result = await getData("user",user.username);
             console.log("Data fetched:", result);
+            if (!result) return;
 
             setData(result);
 
@@ -77,9 +78,9 @@ const GestionUser = () => {
 
     const handleUpdate = async (updatedRow) => {
         try {
-            const result = await update(updatedRow, 'user');
+            const result = await update(updatedRow, 'user',user.username);
             if (result.success) {
-                getData('user').then(setData);  // Rafraîchir les données
+                getData('user',user.username).then(setData);  // Rafraîchir les données
                 setOpenDialog(false);
             } else {
                 setSnackbarMessage(result.message || 'Erreur de connexion');
@@ -93,10 +94,10 @@ const GestionUser = () => {
     const handleAdd = async (updatedRow) => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
-            const result = await add(newRow, 'user');
+            const result = await add(newRow, 'user',user.username);
             console.log("result", result); // Debugging line
             if (result.success) {
-                const updatedData = await getData('user');
+                const updatedData = await getData('user',user.username);
                 setData(updatedData);
                 setOpenDialog(false);
             } else {
@@ -120,7 +121,7 @@ const GestionUser = () => {
         if (!userToDelete) return;
 
         try {
-            const result = await deletee(userToDelete, 'user');
+            const result = await deletee(userToDelete, 'user',user.username);
             if (result.success) {
                 const updatedData = data.filter((item) => item.id !== userToDelete.id);
                 setData(updatedData);

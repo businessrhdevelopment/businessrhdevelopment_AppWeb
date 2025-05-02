@@ -1,6 +1,16 @@
+
 const API_URL = "https://script.google.com/macros/s/AKfycbz9nzy5IilGeUoLPbEWs-_Lka8mjIAtuNW2N5IcD1nT3Dvbr2LQVK7Am-b6kEPhl6CzYQ/exec";
 
 
+const handleAuthFailure = (message) => {
+  if (message === "Votre compte non approved" || message === "Votre compte non existe") {
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+
+    return true;
+  }
+  return false;
+};
 
 
 export const login = async (formattedData,type) => {
@@ -35,11 +45,14 @@ export const loogout = async (formattedData,type) => {
   }
 };
 
-export const getData = async (type) => {
+
+export const getData = async (type,usernameId) => {
     try {
-      const response = await fetch(`${API_URL}?type=${type}`, { method: "GET" });  
+      const response = await fetch(`${API_URL}?type=${type}&usernameId=${usernameId}`, { method: "GET" });  
       if (response.ok) {
         const data = await response.json();
+        if (handleAuthFailure(data.message)) return;
+
         return data;
       } else {
         throw new Error('Erreur lors de la récupération des données');
@@ -50,42 +63,56 @@ export const getData = async (type) => {
     }
   };
 
-export const update = async (formattedData,type) => {
+export const update = async (formattedData,type,usernameId) => {
     try {
-        const response = await fetch(`${API_URL}?action=update&type=${type}`, {
+        const response = await fetch(`${API_URL}?action=update&type=${type}&usernameId=${usernameId}`, {
             method: "POST",
             body: JSON.stringify({ formattedData }),
         });
 
-        return await response.json();
+        const data = await response.json();
+
+        if (handleAuthFailure(data.message)) return;
+    
+        return data;
     } catch (error) {
         console.error("Erreur lors de la mise à jour:", error);
         throw error;
     }
 };
 
-export const add = async (formattedData,type) => {
+export const add = async (formattedData,type,usernameId) => {
   try {
-      const response = await fetch(`${API_URL}?action=add&type=${type}`, {
+
+      const response = await fetch(`${API_URL}?action=add&type=${type}&usernameId=${usernameId}`, {
           method: "POST",
           body: JSON.stringify({ formattedData }),
       });
 
-      return await response.json();
-  } catch (error) {
+      const data = await response.json();
+
+      if (handleAuthFailure(data.message)) return;
+  
+      return data;
+      } catch (error) {
       console.error("Erreur lors de l'ajout:", error);
       throw error;
   }
 };
-export const deletee = async (formattedData,type) => {
+export const deletee = async (formattedData,type,usernameId) => {
   try {
-      const response = await fetch(`${API_URL}?action=delete&type=${type}`, {
+
+      const response = await fetch(`${API_URL}?action=delete&type=${type}&usernameId=${usernameId}`, {
           method: "POST",
           body: JSON.stringify({ formattedData }),
       });
 
-      return await response.json();
-  } catch (error) {
+      const data = await response.json();
+
+      if (handleAuthFailure(data.message)) return;
+  
+      return data;
+      } catch (error) {
       console.error("Erreur lors de l'ajout:", error);
       throw error;
   }
