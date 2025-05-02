@@ -4,13 +4,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import UpdateAgent from "./UpdateAgent";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import * as XLSX from "xlsx";
-import { getData, update, add, deletee } from "../../api/Produits";
+import { getData, update, add, deletee,excelImport } from "../../api/Produits";
 import AddAgent from "./AddAgent";
 import { useSelector } from "react-redux";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from "@mui/lab";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -41,6 +42,7 @@ const GestionAgent = () => {
 
 
 
+
     const user = useSelector(state => state.user.user)
     const [fileName, setFileName] = useState("");
 
@@ -48,15 +50,15 @@ const GestionAgent = () => {
 
 
     const filteredData = useMemo(() => {
-        return data.filter((row) => {
+        return (data || []).filter((row) => {  // <-- Add null check
             const statutValue = row["Statut"] ? row["Statut"].toString().toLowerCase() : "";
             const agentValue = row["Agent"] ? row["Agent"].toString().toLowerCase() : "";
             const selectedStatutValue = selectedStatut ? selectedStatut.toString().toLowerCase() : "";
             const selectedAgentValue = selectedAgent ? selectedAgent.toString().toLowerCase() : "";
-
+    
             const matchesStatut = selectedStatutValue ? statutValue === selectedStatutValue : true;
             const matchesAgent = selectedAgentValue ? agentValue === selectedAgentValue : true;
-
+    
             return matchesStatut && matchesAgent;
         });
     }, [data, selectedStatut, selectedAgent]);
@@ -171,56 +173,109 @@ const GestionAgent = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
-        // Importer un fichier Excel et envoyer les données
-        const handleFileUpload = (event) => {
-            const file = event.target.files?.[0];
-            if (file) {
-                setFileName(file.name);
-                const reader = new FileReader();
-                reader.readAsBinaryString(file);
-                reader.onload = async (e) => {
-                    const binaryString = e.target?.result;
-                    const workbook = XLSX.read(binaryString, { type: "binary" });
-                    const sheetName = workbook.SheetNames[0];
-                    const sheet = workbook.Sheets[sheetName];
-                    const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        
-                    // Supposons que la 1ère ligne (data[0]) contient les en-têtes
-                    // et que les valeurs commencent à partir de data[1]
-                    const formattedData = data.slice(1).map((row) => ({
+    // Importer un fichier Excel et envoyer les données
+    const handleFileUpload = (event) => {
+        setLoading(true);
+
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setFileName(file.name);
+
+        const reader = new FileReader();
+
+        // Détection du type de fichier pour lecture adaptée
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+        reader.onload = async (e) => {
+            try {
+                const fileContent = e.target?.result;
+
+                let workbook;
+
+                if (fileExtension === "csv") {
+                    // Lecture CSV directe
+                    workbook = XLSX.read(fileContent, { type: "string" });
+                } else {
+                    // Lecture XLSX/XLS en binaire
+                    workbook = XLSX.read(fileContent, { type: "binary" });
+                }
+
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                // Supposons que la 1ère ligne (data[0]) contient les en-têtes
+                const formattedData = data.slice(1)
+                    .map((row) => ({
                         "id": row[0]?.toString().trim() || "",
-                        "DATE": row[1] || "",
+                        "DATE": formatDate(row[1]),
                         "Nom": row[2] || "",
                         "CP": row[3] || "",
                         "Commande": row[4] || "",
-                        "Livraison": row[5] || "",
+                        "Livraison": formatDate(row[5]),
                         "Statut": row[6] || "",
                         "Commentaire": row[7]?.toString().trim() || "",
                         "Agent": row[8] || "",
                         "Total": row[9] || ""
-                    })).filter(row =>
-                        row["id"] !== "" && row["Nom"] !== ""
-                    );
-        
-                    try {
-                        console.log(formattedData);
-                        // const result = await add(formattedData, 'produit');
-                        // if (result.success) {
-                        //     getData('produit').then(setData);
-                        //     alert(result.message);
-                        // } else {
-                        //     console.error("Erreur:", result.message);
-                        // }
-                    } catch (error) {
-                        console.error("Erreur lors de l'import:", error);
-                    }
-        
-                    event.target.value = "";
-                    setFileName("");
-                };
+                    }))
+                    .filter(row => {
+                        // Vérifie si au moins une cellule est non vide
+                        return Object.values(row).some(value => value !== "");
+                    });
+
+
+
+                console.log(formattedData);
+
+                // Envoi vers backend désactivé pour le moment
+                const result = await excelImport(formattedData, 'agent', user.username);
+                if (result.success) {
+                    getData('agent', user.username).then(setData);
+                    alert(result.message);
+                } else {
+                    console.error("Erreur:", result.message);
+                }
+
+            } catch (error) {
+                console.error("Erreur lors de l'import:", error);
+            } finally {
+                setLoading(false);
             }
+
+            event.target.value = "";
+            setFileName("");
         };
-        
+
+        // Déclenche le bon type de lecture
+        if (fileExtension === "csv") {
+            reader.readAsText(file);
+        } else {
+            reader.readAsBinaryString(file);
+        }
+    };
+
+    const formatDate = (excelDate) => {
+        if (!excelDate) return "";
+        let date;
+
+        if (typeof excelDate === "number") {
+            // Conversion depuis date Excel (numérique)
+            date = XLSX.SSF.parse_date_code(excelDate);
+            if (!date) return "";
+            return `${String(date.d).padStart(2, '0')}-${String(date.m).padStart(2, '0')}-${date.y}`;
+        }
+
+        try {
+            date = new Date(excelDate);
+            if (isNaN(date)) return "";
+            return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+        } catch {
+            return "";
+        }
+    };
+
+
 
 
 
@@ -271,10 +326,18 @@ const GestionAgent = () => {
                                 </Button>)}
 
                             {/* Bouton pour importer un fichier Excel */}
-                            <Button component="label" variant="contained" color="primary" startIcon={<CloudUploadIcon />}>
+
+
+                            <LoadingButton
+                                component="label"
+                                variant="contained"
+                                color="primary"
+                                startIcon={<CloudUploadIcon />}
+                                loading={loading}
+                            >
                                 Importer un fichier Excel
-                                <input type="file" accept=".xls,.xlsx" hidden onChange={handleFileUpload} />
-                            </Button>
+                                <input type="file" accept=".xls,.xlsx,.csv" hidden onChange={handleFileUpload} />
+                            </LoadingButton>
 
 
                         </Box>

@@ -82,12 +82,16 @@ export const update = async (formattedData,type,usernameId) => {
 export const add = async (formattedData,type,usernameId) => {
   try {
 
+    console.log("formattedData",formattedData);
+    console.log("type",type);
+    console.log("usernameId",usernameId);
       const response = await fetch(`${API_URL}?action=add&type=${type}&usernameId=${usernameId}`, {
           method: "POST",
           body: JSON.stringify({ formattedData }),
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (handleAuthFailure(data.message)) return;
   
@@ -97,6 +101,30 @@ export const add = async (formattedData,type,usernameId) => {
       throw error;
   }
 };
+
+export const excelImport = async (formattedData,type,usernameId) => {
+  try {
+
+    console.log("formattedData",formattedData);
+    console.log("type",type);
+    console.log("usernameId",usernameId);
+      const response = await fetch(`${API_URL}?action=excel&type=${type}&usernameId=${usernameId}`, {
+          method: "POST",
+          body: JSON.stringify({ formattedData }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (handleAuthFailure(data.message)) return;
+  
+      return data;
+      } catch (error) {
+      console.error("Erreur lors de l'ajout:", error);
+      throw error;
+  }
+};
+
 export const deletee = async (formattedData,type,usernameId) => {
   try {
 
