@@ -53,7 +53,7 @@ const AddAgent = ({ open, handleClose, onAdd }) => {
         if (open) {
             fetchAgents();
         }
-    }, [open]);
+    }, [open,fetchAgents]);
 
 
     const handleChange = (field, value) => {

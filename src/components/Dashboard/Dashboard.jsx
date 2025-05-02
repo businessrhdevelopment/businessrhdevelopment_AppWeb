@@ -47,7 +47,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   if (loading) {
     return (
