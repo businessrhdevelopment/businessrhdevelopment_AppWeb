@@ -98,7 +98,7 @@ const Sidebar = () => {
       }}
     >
       <Box sx={{ p: 1, textAlign: "center", cursor: "pointer" }} onClick={toggleSidebar}>
-        <img src={logo} alt="Logo" style={{ width: isCollapsed ? "40px" : "70px" }} />
+        <img src={logo} alt="Logo" style={{ width: isCollapsed ? "40px" : "70px"  }} />
       </Box>
 
 
@@ -110,7 +110,7 @@ const Sidebar = () => {
               selected={selectedIndex === index}
               onClick={() => navigate(path)}
               sx={{
-                "&:hover": { color: "rgb(26,117,211)" },
+                "&:hover": { color: "rgb(26,117,211)", svg: { color: "rgb(26,117,211)" } },
                 "&.Mui-selected": { color: "rgb(26,117,211)" },
                 "& .MuiListItemIcon-root": { color: selectedIndex === index ? "rgb(26,117,211)" : "white" },
                 "& .css-cokf1l-MuiListItemIcon-root" :{ minWidth: "40px"},

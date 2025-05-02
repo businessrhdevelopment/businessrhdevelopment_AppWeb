@@ -11,10 +11,16 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useSelector } from "react-redux";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 
 const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
     const [loading, setLoading] = useState(false);
     const user = useSelector(state => state.user.user)
+    const [showPassword, setShowPassword] = useState(false);
+
 
     const [updatedData, setUpdatedData] = useState({ ...userData });
 
@@ -80,15 +86,31 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
                         />
                     </Grid>
                     <Grid item>
-                        <TextField
-                            fullWidth
-                            label="Password"
-                            type="password"
-                            value={updatedData.password || ""}
-                            onChange={(e) => handleChange("password", e.target.value)}
-                            variant="outlined"
-                        />
+                    <TextField
+    fullWidth
+    label="Password"
+    type={showPassword ? "text" : "password"}
+    value={updatedData.password || ""}
+    onChange={(e) => handleChange("password", e.target.value)}
+    variant="outlined"
+    InputProps={{
+        endAdornment: (
+            <InputAdornment position="end">
+                <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                    aria-label="toggle password visibility"
+                >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+            </InputAdornment>
+        ),
+    }}
+/>
+
                     </Grid>
+
+                    
 
                     {updatedData.role !== "admin" && (<>
                         <Grid item>

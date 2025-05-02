@@ -37,8 +37,7 @@ const AppRouter = () => {
       const decoded = parseJwt(storedUser.token);
       const now = Date.now() / 1000;
 
-      console.log('Decoded JWT exp:', decoded?.exp); // Debugging line
-      console.log('Current time:', now); // Debugging line
+
       if (decoded?.exp && decoded.exp < now) {
         // Token expiré : supprimer et rediriger
         localStorage.removeItem('user');

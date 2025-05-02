@@ -15,8 +15,7 @@ const handleAuthFailure = (message) => {
 
 export const login = async (formattedData,type) => {
   try {
-    console.log("formattedData",formattedData)
-    console.log("type",type)
+
       const response = await fetch(`${API_URL}?action=auth&type=${type}`, {
           method: "POST",
           body: JSON.stringify({ formattedData }),
@@ -31,8 +30,7 @@ export const login = async (formattedData,type) => {
 
 export const loogout = async (formattedData,type) => {
   try {
-    console.log("formattedData",formattedData)
-    console.log("type",type)
+
       const response = await fetch(`${API_URL}?type=${type}`, {
           method: "POST",
           body: JSON.stringify({ formattedData }),

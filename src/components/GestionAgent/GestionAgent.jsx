@@ -42,6 +42,8 @@ const GestionAgent = () => {
 
 
     const user = useSelector(state => state.user.user)
+    const [fileName, setFileName] = useState("");
+
 
 
 
@@ -69,9 +71,7 @@ const GestionAgent = () => {
         setLoading(true);
         setError(null);
         try {
-            console.log("Fetching data agent...");
-            const result = await getData("agent",user.username);
-            console.log("Data fetched:", result);
+            const result = await getData("agent", user.username);
 
             if (!result) return;
 
@@ -100,9 +100,9 @@ const GestionAgent = () => {
 
     const handleUpdate = async (updatedRow) => {
         try {
-            const result = await update(updatedRow, 'agent',user.username);
+            const result = await update(updatedRow, 'agent', user.username);
             if (result.success) {
-                getData('agent',user.username).then(setData);  // Rafraîchir les données
+                getData('agent', user.username).then(setData);  // Rafraîchir les données
                 setOpenDialog(false);
             } else {
                 setSnackbarMessage(result.message || 'Erreur de connexion');
@@ -118,10 +118,9 @@ const GestionAgent = () => {
     const handleAdd = async (updatedRow) => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
-            const result = await add(newRow, 'agent',user.username);
-            console.log("result", result); // Debugging line
+            const result = await add(newRow, 'agent', user.username);
             if (result.success) {
-                const updatedData = await getData('agent',user.username);
+                const updatedData = await getData('agent', user.username);
                 setData(updatedData);
                 setOpenDialog(false);
             } else {
@@ -145,7 +144,7 @@ const GestionAgent = () => {
 
         if (!agentToDelete) return;
         try {
-            const result = await deletee(agentToDelete, 'agent',user.username);
+            const result = await deletee(agentToDelete, 'agent', user.username);
             if (result.success) {
                 const updatedData = data.filter((item) => item.id !== agentToDelete.id);
                 setData(updatedData);
@@ -172,6 +171,56 @@ const GestionAgent = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
+        // Importer un fichier Excel et envoyer les données
+        const handleFileUpload = (event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+                setFileName(file.name);
+                const reader = new FileReader();
+                reader.readAsBinaryString(file);
+                reader.onload = async (e) => {
+                    const binaryString = e.target?.result;
+                    const workbook = XLSX.read(binaryString, { type: "binary" });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+                    const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        
+                    // Supposons que la 1ère ligne (data[0]) contient les en-têtes
+                    // et que les valeurs commencent à partir de data[1]
+                    const formattedData = data.slice(1).map((row) => ({
+                        "id": row[0]?.toString().trim() || "",
+                        "DATE": row[1] || "",
+                        "Nom": row[2] || "",
+                        "CP": row[3] || "",
+                        "Commande": row[4] || "",
+                        "Livraison": row[5] || "",
+                        "Statut": row[6] || "",
+                        "Commentaire": row[7]?.toString().trim() || "",
+                        "Agent": row[8] || "",
+                        "Total": row[9] || ""
+                    })).filter(row =>
+                        row["id"] !== "" && row["Nom"] !== ""
+                    );
+        
+                    try {
+                        console.log(formattedData);
+                        // const result = await add(formattedData, 'produit');
+                        // if (result.success) {
+                        //     getData('produit').then(setData);
+                        //     alert(result.message);
+                        // } else {
+                        //     console.error("Erreur:", result.message);
+                        // }
+                    } catch (error) {
+                        console.error("Erreur lors de l'import:", error);
+                    }
+        
+                    event.target.value = "";
+                    setFileName("");
+                };
+            }
+        };
+        
 
 
 
@@ -220,6 +269,12 @@ const GestionAgent = () => {
                                 >
                                     Ajouter une commande
                                 </Button>)}
+
+                            {/* Bouton pour importer un fichier Excel */}
+                            <Button component="label" variant="contained" color="primary" startIcon={<CloudUploadIcon />}>
+                                Importer un fichier Excel
+                                <input type="file" accept=".xls,.xlsx" hidden onChange={handleFileUpload} />
+                            </Button>
 
 
                         </Box>

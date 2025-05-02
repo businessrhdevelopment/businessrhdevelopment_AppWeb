@@ -22,11 +22,9 @@ const Dashboard = () => {
 
 
   const loadData = async () => {
-    console.log("user",user)
-    setLoading(true);
+
     try {
       const result = await getData("agentStatus", user.username);
-      console.log("dashboard"+result);
 
       if (!result){
         setAgentData([]);

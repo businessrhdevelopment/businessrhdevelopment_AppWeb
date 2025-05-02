@@ -59,7 +59,6 @@ const GestionUser = () => {
         setError(null);
         try {
             const result = await getData("user",user.username);
-            console.log("Data fetched:", result);
             if (!result) return;
 
             setData(result);
@@ -95,7 +94,6 @@ const GestionUser = () => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
             const result = await add(newRow, 'user',user.username);
-            console.log("result", result); // Debugging line
             if (result.success) {
                 const updatedData = await getData('user',user.username);
                 setData(updatedData);
@@ -247,7 +245,7 @@ const GestionUser = () => {
                                             <TableRow key={index}>
                                                 <TableCell>{row.id}</TableCell>
                                                 <TableCell>{row.username}</TableCell>
-                                                <TableCell>{row.password}</TableCell>
+                                                <TableCell>{'********'}</TableCell>
                                                 <TableCell >{row.role}</TableCell>
                                                 <TableCell>
                                                     <span style={getRoleStyle(row.Approved)}>{row.Approved}</span>

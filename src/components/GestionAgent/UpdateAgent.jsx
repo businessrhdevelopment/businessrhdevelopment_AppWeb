@@ -47,7 +47,6 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            console.log("FormData avant formatage :", formData.DATE);
             const formattedDate = formatDateToDDMMYYYY(formData.DATE);
             const formattedLivraison = formatDateToDDMMYYYY(formData.Livraison); // Formatage de la date de livraison
 
@@ -59,7 +58,6 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
                 Livraison: formattedLivraison, // Ajout de la date de livraison formatée
             };
 
-            console.log("FormData à envoyer :", updatedFormData);
             await onUpdate(updatedFormData);
             handleClose();
         } catch (error) {
