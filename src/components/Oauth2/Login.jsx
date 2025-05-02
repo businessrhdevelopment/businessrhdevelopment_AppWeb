@@ -42,6 +42,15 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
+const Footer = styled('footer')(() => ({
+  position: 'fixed',
+  bottom: 10,
+  width: '100%',
+  textAlign: 'center',
+  fontSize: '0.9rem',
+  color: '#555',
+}));
+
 const SignInContainer = styled(Stack)(({ theme }) => ({
   height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
   minHeight: '100%',
@@ -146,61 +155,58 @@ export default function SignIn(props) {
 
   return (
     <>
-      <CssBaseline enableColorScheme />
-      <SignInContainer direction="column" justifyContent="space-between">
-        <Card variant="outlined">
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-            align="center"
-            color='#1976d2'
+    <CssBaseline enableColorScheme />
+    <SignInContainer>
+      <Card variant="outlined" sx={{ padding: 4, minWidth: 350 }}>
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+          align="center"
+          color="#1976d2"
+        >
+          Sign in
+        </Typography>
+
+        <Box
+          sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleLogin();
+            }
+          }}
+        >
+          <TextField
+            fullWidth
+            label="Nom d'utilisateur"
+            variant="outlined"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            sx={inputStyle}
+          />
+
+          <TextField
+            fullWidth
+            label="Mot de passe"
+            variant="outlined"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={inputStyle}
+          />
+
+          <LoadingButton
+            fullWidth
+            variant="contained"
+            onClick={handleLogin}
+            loading={loading}
+            sx={{ mt: 3 }}
           >
-            Sign in
-          </Typography>
+            Se connecter
+          </LoadingButton>
+        </Box>
+      </Card>
 
-
-
-          <Box
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleLogin();
-              }
-            }}
-          >
-            <TextField
-              fullWidth
-              label="Nom d'utilisateur"
-              variant="outlined"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              sx={inputStyle}
-            />
-
-            <TextField
-              fullWidth
-              label="Mot de passe"
-              variant="outlined"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              sx={inputStyle}
-            />
-
-            <LoadingButton
-              fullWidth
-              variant="contained"
-              onClick={handleLogin}
-              loading={loading}
-              sx={{ mt: 3 }}
-            >
-              Se connecter
-            </LoadingButton>
-
-          </Box>
-        </Card>
-      </SignInContainer>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
@@ -215,7 +221,24 @@ export default function SignIn(props) {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+    </SignInContainer>
 
-    </>
+    {/* ✅ Footer en bas de l’écran */}
+    <Footer>
+      Created by{' '}
+      <a
+        href="https://redaalout.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          color: '#1976d2',
+          textDecoration: 'none',
+          fontWeight: 'bold',
+        }}
+      >
+        Reda ALOUT
+      </a>
+    </Footer>
+  </>
   );
 }
