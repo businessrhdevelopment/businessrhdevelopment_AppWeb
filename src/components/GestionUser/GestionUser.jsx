@@ -60,7 +60,7 @@ const GestionUser = () => {
         setLoading(true);
         setError(null);
         try {
-            const result = await getData("user",user.username);
+            const result = await getData("user", user.username);
             if (!result) return;
 
             setData(result);
@@ -79,14 +79,15 @@ const GestionUser = () => {
 
     const handleUpdate = async (updatedRow) => {
         try {
-            const result = await update(updatedRow, 'user',user.username);
+            const result = await update(updatedRow, 'user', user.username);
             if (result.success) {
-                getData('user',user.username).then(setData);  // Rafraîchir les données
+                getData('user', user.username).then(setData);  // Rafraîchir les données
                 setOpenDialog(false);
             } else {
                 setSnackbarMessage(result.message || 'Erreur de connexion');
                 setSnackbarSeverity('error');
-                setOpenSnackbar(true);            }
+                setOpenSnackbar(true);
+            }
         } catch (error) {
             console.error("Erreur lors de la mise à jour:", error);
         }
@@ -95,15 +96,16 @@ const GestionUser = () => {
     const handleAdd = async (updatedRow) => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
-            const result = await add(newRow, 'user',user.username);
+            const result = await add(newRow, 'user', user.username);
             if (result.success) {
-                const updatedData = await getData('user',user.username);
+                const updatedData = await getData('user', user.username);
                 setData(updatedData);
                 setOpenDialog(false);
             } else {
                 setSnackbarMessage(result.message || 'Erreur de connexion');
                 setSnackbarSeverity('error');
-                setOpenSnackbar(true);            }
+                setOpenSnackbar(true);
+            }
         } catch (error) {
             console.error("Erreur lors de l'ajout:", error);
         }
@@ -121,7 +123,7 @@ const GestionUser = () => {
         if (!userToDelete) return;
 
         try {
-            const result = await deletee(userToDelete, 'user',user.username);
+            const result = await deletee(userToDelete, 'user', user.username);
             if (result.success) {
                 const updatedData = data.filter((item) => item.id !== userToDelete.id);
                 setData(updatedData);
@@ -143,7 +145,7 @@ const GestionUser = () => {
 
 
 
-    
+
 
 
     const [tableHeight, setTableHeight] = useState("80vh");
@@ -181,18 +183,18 @@ const GestionUser = () => {
                         <Typography variant="h5" fontWeight="bold">Gestion des utilisateurs</Typography>
                         <Box display="flex" gap={2}>
 
-                        {(user.role === "admin") && (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                startIcon={<AddIcon />}
-                                onClick={() => setOpen(true)}
-                            >
-                                Ajouter un utilisateur
-                            </Button>
-                        )}
+                            {(user.role === "admin") && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<AddIcon />}
+                                    onClick={() => setOpen(true)}
+                                >
+                                    Ajouter un utilisateur
+                                </Button>
+                            )}
 
-        </Box>
+                        </Box>
                     </Box>
 
                     <Box display="flex" gap={2} mb={2}>
@@ -264,12 +266,12 @@ const GestionUser = () => {
                                                     </IconButton>
 
                                                     {row.role !== "admin" && (
-                                                    <IconButton
-                                                        sx={{ color: "#d32f2f" }}
-                                                        onClick={() => handleDelete(row.id, row.username)}
-                                                    >
-                                                        <DeleteIcon />
-                                                    </IconButton>)}
+                                                        <IconButton
+                                                            sx={{ color: "#d32f2f" }}
+                                                            onClick={() => handleDelete(row.id, row.username)}
+                                                        >
+                                                            <DeleteIcon />
+                                                        </IconButton>)}
                                                 </TableCell>
 
                                             </TableRow>
