@@ -32,20 +32,16 @@ const AppRouter = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser && storedUser.token) {
-      const decoded = parseJwt(storedUser.token);
+      const exp = user?.exp;
       const now = Date.now() / 1000;
 
 
-      if (decoded?.exp && decoded.exp < now) {
+      if (exp && exp < now) {
         // Token expiré : supprimer et rediriger
-        localStorage.removeItem('user');
+        localStorage.removeItem("user");
+        window.location.href = "/login";
         dispatch(setUser(null));
-      } else {
-        dispatch(setUser(storedUser));
-      }
-    }
+      } 
   }, [dispatch]);
 
   return (
