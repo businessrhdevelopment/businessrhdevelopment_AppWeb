@@ -60,9 +60,7 @@ const Dashboard = () => {
   };
   useEffect(() => {
 
-    console.log("Date     ",Date())
 
-    console.log("Date exp ",new Date(user.exp * 1000))
 
 
   

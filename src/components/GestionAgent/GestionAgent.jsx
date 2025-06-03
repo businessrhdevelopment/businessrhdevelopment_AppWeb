@@ -78,7 +78,6 @@ const GestionAgent = () => {
         setError(null);
         try {
             const result = await getData("agent", user.username);
-            console.log("Données récupérées:", result);
 
             if (!result) return;
 
@@ -125,7 +124,6 @@ const GestionAgent = () => {
     const handleAdd = async (updatedRow) => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
-            console.log("Nouvelle ligne à ajouter:", newRow);
             const result = await add(newRow, 'agent', user.username);
             if (result.success) {
                 const updatedData = await getData('agent', user.username);
@@ -233,7 +231,6 @@ const GestionAgent = () => {
 
 
 
-                console.log(formattedData);
 
                 // Envoi vers backend désactivé pour le moment
                 const result = await excelImport(formattedData, 'agent', user.username);
