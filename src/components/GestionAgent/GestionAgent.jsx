@@ -284,33 +284,7 @@ const GestionAgent = () => {
 
 
     // Ajoutez cette fonction près de vos imports
-    // const exportToExcel = (data, fileName = 'export_agents') => {
-    //     // Créer un nouveau workbook
-    //     const wb = XLSX.utils.book_new();
 
-    //     // Préparer les données pour l'export
-    //     const exportData = data.map(row => ({
-    //         ID: row.id,
-    //         Date: row.DATE,
-    //         Nom: row.Nom,
-    //         'Code Postal': row.CP,
-    //         Commande: row.Commande,
-    //         Livraison: row.Livraison,
-    //         Statut: row.Statut,
-    //         Commentaire: row.Commentaire,
-    //         Agent: row.Agent,
-    //         Total: row.Total
-    //     }));
-
-    //     // Créer une worksheet à partir des données
-    //     const ws = XLSX.utils.json_to_sheet(exportData);
-
-    //     // Ajouter la worksheet au workbook
-    //     XLSX.utils.book_append_sheet(wb, ws, "Agents");
-
-    //     // Générer le fichier Excel et le télécharger
-    //     XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().slice(0, 10)}.xlsx`);
-    // };
 
     const exportToExcel = (data, fileName = 'export_agents') => {
         const now = new Date();
