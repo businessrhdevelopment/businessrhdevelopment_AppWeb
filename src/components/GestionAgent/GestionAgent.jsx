@@ -78,6 +78,7 @@ const GestionAgent = () => {
         setError(null);
         try {
             const result = await getData("agent", user.username);
+            console.log("Données récupérées:", result);
 
             if (!result) return;
 
@@ -124,6 +125,7 @@ const GestionAgent = () => {
     const handleAdd = async (updatedRow) => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
+            console.log("Nouvelle ligne à ajouter:", newRow);
             const result = await add(newRow, 'agent', user.username);
             if (result.success) {
                 const updatedData = await getData('agent', user.username);
@@ -231,6 +233,7 @@ const GestionAgent = () => {
 
 
 
+                console.log(formattedData);
 
                 // Envoi vers backend désactivé pour le moment
                 const result = await excelImport(formattedData, 'agent', user.username);
@@ -281,22 +284,12 @@ const GestionAgent = () => {
 
 
     // Ajoutez cette fonction près de vos imports
-
-
     const exportToExcel = (data, fileName = 'export_agents') => {
-        const now = new Date();
-        const currentMonth = now.getMonth(); // 0-indexed (0 = Janvier)
-        const currentYear = now.getFullYear();
-    
-        // Filtrer les données du mois et année actuels
-        const filteredData = data.filter(row => {
-            if (!row.DATE) return false;
-            const [day, month, year] = row.DATE.split('-').map(Number);
-            return (month - 1 === currentMonth) && (year === currentYear);
-        });
-    
+        // Créer un nouveau workbook
+        const wb = XLSX.utils.book_new();
+
         // Préparer les données pour l'export
-        const exportData = filteredData.map(row => ({
+        const exportData = data.map(row => ({
             ID: row.id,
             Date: row.DATE,
             Nom: row.Nom,
@@ -308,15 +301,51 @@ const GestionAgent = () => {
             Agent: row.Agent,
             Total: row.Total
         }));
-    
-        // Créer un nouveau workbook
-        const wb = XLSX.utils.book_new();
+
+        // Créer une worksheet à partir des données
         const ws = XLSX.utils.json_to_sheet(exportData);
+
+        // Ajouter la worksheet au workbook
         XLSX.utils.book_append_sheet(wb, ws, "Agents");
-    
+
         // Générer le fichier Excel et le télécharger
-        XLSX.writeFile(wb, `${fileName}_${now.toISOString().slice(0, 10)}.xlsx`);
+        XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().slice(0, 10)}.xlsx`);
     };
+
+    // const exportToExcel = (data, fileName = 'export_agents') => {
+    //     const now = new Date();
+    //     const currentMonth = now.getMonth(); // 0-indexed (0 = Janvier)
+    //     const currentYear = now.getFullYear();
+    
+    //     // Filtrer les données du mois et année actuels
+    //     const filteredData = data.filter(row => {
+    //         if (!row.DATE) return false;
+    //         const [day, month, year] = row.DATE.split('-').map(Number);
+    //         return (month - 1 === currentMonth) && (year === currentYear);
+    //     });
+    
+    //     // Préparer les données pour l'export
+    //     const exportData = filteredData.map(row => ({
+    //         ID: row.id,
+    //         Date: row.DATE,
+    //         Nom: row.Nom,
+    //         'Code Postal': row.CP,
+    //         Commande: row.Commande,
+    //         Livraison: row.Livraison,
+    //         Statut: row.Statut,
+    //         Commentaire: row.Commentaire,
+    //         Agent: row.Agent,
+    //         Total: row.Total
+    //     }));
+    
+    //     // Créer un nouveau workbook
+    //     const wb = XLSX.utils.book_new();
+    //     const ws = XLSX.utils.json_to_sheet(exportData);
+    //     XLSX.utils.book_append_sheet(wb, ws, "Agents");
+    
+    //     // Générer le fichier Excel et le télécharger
+    //     XLSX.writeFile(wb, `${fileName}_${now.toISOString().slice(0, 10)}.xlsx`);
+    // };
     
 
 
