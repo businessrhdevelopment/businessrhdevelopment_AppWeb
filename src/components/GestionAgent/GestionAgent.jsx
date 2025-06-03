@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import UpdateAgent from "./UpdateAgent";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import * as XLSX from "xlsx";
-import { getData, update, add, deletee,excelImport } from "../../api/Produits";
+import { getData, update, add, deletee, excelImport } from "../../api/Produits";
 import AddAgent from "./AddAgent";
 import { useSelector } from "react-redux";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -59,10 +59,10 @@ const GestionAgent = () => {
             const agentValue = row["Agent"] ? row["Agent"].toString().toLowerCase() : "";
             const selectedStatutValue = selectedStatut ? selectedStatut.toString().toLowerCase() : "";
             const selectedAgentValue = selectedAgent ? selectedAgent.toString().toLowerCase() : "";
-    
+
             const matchesStatut = selectedStatutValue ? statutValue === selectedStatutValue : true;
             const matchesAgent = selectedAgentValue ? agentValue === selectedAgentValue : true;
-    
+
             return matchesStatut && matchesAgent;
         });
     }, [data, selectedStatut, selectedAgent]);
@@ -281,33 +281,69 @@ const GestionAgent = () => {
 
 
     // Ajoutez cette fonction près de vos imports
-const exportToExcel = (data, fileName = 'export_agents') => {
-    // Créer un nouveau workbook
-    const wb = XLSX.utils.book_new();
+    // const exportToExcel = (data, fileName = 'export_agents') => {
+    //     // Créer un nouveau workbook
+    //     const wb = XLSX.utils.book_new();
+
+    //     // Préparer les données pour l'export
+    //     const exportData = data.map(row => ({
+    //         ID: row.id,
+    //         Date: row.DATE,
+    //         Nom: row.Nom,
+    //         'Code Postal': row.CP,
+    //         Commande: row.Commande,
+    //         Livraison: row.Livraison,
+    //         Statut: row.Statut,
+    //         Commentaire: row.Commentaire,
+    //         Agent: row.Agent,
+    //         Total: row.Total
+    //     }));
+
+    //     // Créer une worksheet à partir des données
+    //     const ws = XLSX.utils.json_to_sheet(exportData);
+
+    //     // Ajouter la worksheet au workbook
+    //     XLSX.utils.book_append_sheet(wb, ws, "Agents");
+
+    //     // Générer le fichier Excel et le télécharger
+    //     XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    // };
+
+    const exportToExcel = (data, fileName = 'export_agents') => {
+        const now = new Date();
+        const currentMonth = now.getMonth(); // 0-indexed (0 = Janvier)
+        const currentYear = now.getFullYear();
     
-    // Préparer les données pour l'export
-    const exportData = data.map(row => ({
-      ID: row.id,
-      Date: row.DATE,
-      Nom: row.Nom,
-      'Code Postal': row.CP,
-      Commande: row.Commande,
-      Livraison: row.Livraison,
-      Statut: row.Statut,
-      Commentaire: row.Commentaire,
-      Agent: row.Agent,
-      Total: row.Total
-    }));
-  
-    // Créer une worksheet à partir des données
-    const ws = XLSX.utils.json_to_sheet(exportData);
+        // Filtrer les données du mois et année actuels
+        const filteredData = data.filter(row => {
+            if (!row.DATE) return false;
+            const [day, month, year] = row.DATE.split('-').map(Number);
+            return (month - 1 === currentMonth) && (year === currentYear);
+        });
     
-    // Ajouter la worksheet au workbook
-    XLSX.utils.book_append_sheet(wb, ws, "Agents");
+        // Préparer les données pour l'export
+        const exportData = filteredData.map(row => ({
+            ID: row.id,
+            Date: row.DATE,
+            Nom: row.Nom,
+            'Code Postal': row.CP,
+            Commande: row.Commande,
+            Livraison: row.Livraison,
+            Statut: row.Statut,
+            Commentaire: row.Commentaire,
+            Agent: row.Agent,
+            Total: row.Total
+        }));
     
-    // Générer le fichier Excel et le télécharger
-    XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().slice(0,10)}.xlsx`);
-  };
+        // Créer un nouveau workbook
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        XLSX.utils.book_append_sheet(wb, ws, "Agents");
+    
+        // Générer le fichier Excel et le télécharger
+        XLSX.writeFile(wb, `${fileName}_${now.toISOString().slice(0, 10)}.xlsx`);
+    };
+    
 
 
 
@@ -347,41 +383,41 @@ const exportToExcel = (data, fileName = 'export_agents') => {
 
                         <Box display="flex" gap={2}>
                             {(user.role === "admin") && (
-<>
-<Button
-                                    variant="contained"
-                                    color="primary"
-                                    startIcon={<AddIcon />}
-                                    onClick={() => setOpen(true)}
-                                >
-                                    Ajouter une commande
-                                </Button>
-                                
-                                <LoadingButton
-                                component="label"
-                                variant="contained"
-                                color="primary"
-                                startIcon={<CloudUploadIcon />}
-                                loading={loading1}
-                            >
-                                Importer un fichier Excel
-                                <input type="file" accept=".xls,.xlsx,.csv" hidden onChange={handleFileUpload} />
-                            </LoadingButton>
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        startIcon={<AddIcon />}
+                                        onClick={() => setOpen(true)}
+                                    >
+                                        Ajouter une commande
+                                    </Button>
 
-<Button 
-  variant="contained" 
-  color="success" 
-  onClick={() => exportToExcel(filteredData, 'agents_export')}
-  startIcon={<CloudDownloadIcon />}
->
-  Exporter en Excel
-</Button>
-                            
-</>
-                               
-                            )   
-                                
-                                }
+                                    <LoadingButton
+                                        component="label"
+                                        variant="contained"
+                                        color="primary"
+                                        startIcon={<CloudUploadIcon />}
+                                        loading={loading1}
+                                    >
+                                        Importer un fichier Excel
+                                        <input type="file" accept=".xls,.xlsx,.csv" hidden onChange={handleFileUpload} />
+                                    </LoadingButton>
+
+                                    <Button
+                                        variant="contained"
+                                        color="success"
+                                        onClick={() => exportToExcel(filteredData, 'agents_export')}
+                                        startIcon={<CloudDownloadIcon />}
+                                    >
+                                        Exporter en Excel
+                                    </Button>
+
+                                </>
+
+                            )
+
+                            }
 
 
 

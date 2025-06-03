@@ -124,6 +124,7 @@ export default function SignIn(props) {
       
         // Enregistrement et redirection
         localStorage.setItem('user', JSON.stringify(decoded));
+        localStorage.setItem('token', result.token);
         dispatch(setUser(decoded));
         navigate('/');
       }

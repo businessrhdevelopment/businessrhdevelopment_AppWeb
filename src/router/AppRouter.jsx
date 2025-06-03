@@ -35,13 +35,14 @@ const AppRouter = () => {
       const exp = user?.exp;
       const now = Date.now() / 1000;
 
+      
 
-      if (exp && exp < now) {
-        // Token expiré : supprimer et rediriger
-        localStorage.removeItem("user");
-        window.location.href = "/login";
-        dispatch(setUser(null));
-      } 
+      // if (exp && exp < now) {
+      //   // Token expiré : supprimer et rediriger
+      //   localStorage.removeItem("token");
+      //   window.location.href = "/login";
+      //   dispatch(setUser(null));
+      // } 
   }, [dispatch]);
 
   return (
