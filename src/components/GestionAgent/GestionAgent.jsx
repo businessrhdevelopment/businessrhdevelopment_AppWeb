@@ -78,6 +78,7 @@ const GestionAgent = () => {
         setError(null);
         try {
             const result = await getData("agent", user.username);
+            console.log("Données récupérées:", result);
 
             if (!result) return;
 
@@ -124,6 +125,7 @@ const GestionAgent = () => {
     const handleAdd = async (updatedRow) => {
         try {
             const newRow = { ...updatedRow }; // Attribution automatique de l'id
+            console.log("Nouvelle ligne à ajouter:", newRow);
             const result = await add(newRow, 'agent', user.username);
             if (result.success) {
                 const updatedData = await getData('agent', user.username);
@@ -134,7 +136,8 @@ const GestionAgent = () => {
                 setSnackbarSeverity('error');
                 setOpenSnackbar(true);
             }
-        } catch (error) {
+         } 
+         catch (error) {
             console.error("Erreur lors de l'ajout:", error);
         }
     };

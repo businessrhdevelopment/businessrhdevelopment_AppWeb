@@ -4,10 +4,10 @@ import { handleAuthFailure } from './useApiError';
 
 
 //1
-const API_URL = "https://script.google.com/macros/s/AKfycbz9nzy5IilGeUoLPbEWs-_Lka8mjIAtuNW2N5IcD1nT3Dvbr2LQVK7Am-b6kEPhl6CzYQ/exec"
+// const API_URL = "https://script.google.com/macros/s/AKfycbz9nzy5IilGeUoLPbEWs-_Lka8mjIAtuNW2N5IcD1nT3Dvbr2LQVK7Am-b6kEPhl6CzYQ/exec"
 
 //2
-// const API_URL = "https://script.google.com/macros/s/AKfycbyl8mSSXX3HKxsspJm4lkAnJLJzW2UK53KqdY9TS-goET3-W0dPrXPnUKlW-X0qvEnr2w/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyl8mSSXX3HKxsspJm4lkAnJLJzW2UK53KqdY9TS-goET3-W0dPrXPnUKlW-X0qvEnr2w/exec";
 
 
 
