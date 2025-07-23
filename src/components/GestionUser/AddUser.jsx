@@ -17,7 +17,7 @@ const AddUser = ({ open, handleClose, onAdd }) => {
 
     const [loading, setLoading] = useState(false);
     const user = useSelector(state => state.user.user)
-    
+
 
 
     const [newData, setNewData] = useState({
@@ -26,7 +26,7 @@ const AddUser = ({ open, handleClose, onAdd }) => {
         password: "",
         role: "",
         Approved: "",
-        connexion: ""
+        mois: ""
     });
 
     const [error, setError] = useState(null);
@@ -51,7 +51,7 @@ const AddUser = ({ open, handleClose, onAdd }) => {
                 password: "",
                 role: "",
                 Approved: "",
-                connexion: ""
+                mois: ""
             });
         } catch (error) {
             console.error("Erreur lors de l'ajout :", error);
@@ -67,13 +67,29 @@ const AddUser = ({ open, handleClose, onAdd }) => {
             password: "",
             role: "",
             Approved: "",
-            connexion: ""
+            mois: ""
         });
         handleClose();
     };
 
     const roleOptions = ["admin", "agent"];
     const approvedOptions = ["yes", "no"];
+
+    const moisOptions = [
+        { value: 1, label: "Janvier" },
+        { value: 2, label: "Février" },
+        { value: 3, label: "Mars" },
+        { value: 4, label: "Avril" },
+        { value: 5, label: "Mai" },
+        { value: 6, label: "Juin" },
+        { value: 7, label: "Juillet" },
+        { value: 8, label: "Août" },
+        { value: 9, label: "Septembre" },
+        { value: 10, label: "Octobre" },
+        { value: 11, label: "Novembre" },
+        { value: 12, label: "Décembre" },
+    ];
+
 
     return (
         <Dialog
@@ -106,39 +122,56 @@ const AddUser = ({ open, handleClose, onAdd }) => {
                     </Grid>
                     {newData.role !== "admin" && (
                         <>
-                                            <Grid item>
-                                            <TextField
-                                                select
-                                                fullWidth
-                                                label="Role"
-                                                value={newData.role}
-                                                onChange={(e) => handleChange("role", e.target.value)}
-                                                variant="outlined"
-                                            >
-                                                {roleOptions.map((role) => (
-                                                    <MenuItem key={role} value={role}>
-                                                        {role}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                        </Grid>
-                                        <Grid item>
-                                            <TextField
-                                                select
-                                                fullWidth
-                                                label="Approved"
-                                                value={newData.Approved}
-                                                onChange={(e) => handleChange("Approved", e.target.value)}
-                                                variant="outlined"
-                                            >
-                                                {approvedOptions.map((option) => (
-                                                    <MenuItem key={option} value={option}>
-                                                        {option}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                        </Grid>
-                                        </>
+                            <Grid item>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    label="Role"
+                                    value={newData.role}
+                                    onChange={(e) => handleChange("role", e.target.value)}
+                                    variant="outlined"
+                                >
+                                    {roleOptions.map((role) => (
+                                        <MenuItem key={role} value={role}>
+                                            {role}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    label="Approved"
+                                    value={newData.Approved}
+                                    onChange={(e) => handleChange("Approved", e.target.value)}
+                                    variant="outlined"
+                                >
+                                    {approvedOptions.map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    label="Mois"
+                                    value={newData.mois}
+                                    onChange={(e) => handleChange("mois", e.target.value)}
+                                    variant="outlined"
+                                >
+                                    {moisOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+
+                        </>
                     )}
 
 

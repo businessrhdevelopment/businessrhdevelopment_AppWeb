@@ -32,6 +32,8 @@ const GestionAgent = () => {
     const [error, setError] = useState(null);
     const [selectedStatut, setSelectedStatut] = useState("");
     const [selectedAgent, setSelectedAgent] = useState("");
+    const [selectedCP, setSelectedCP] = useState("");
+
     const [searchText, setSearchText] = useState("");
 
     const [open, setOpen] = useState(false); // Pour AddAgent
@@ -48,6 +50,8 @@ const GestionAgent = () => {
 
 
     const user = useSelector(state => state.user.user)
+    const role = useSelector(state => state.user.role)
+
     const [fileName, setFileName] = useState("");
 
 
@@ -57,21 +61,31 @@ const GestionAgent = () => {
         return (data || []).filter((row) => {  // <-- Add null check
             const statutValue = row["Statut"] ? row["Statut"].toString().toLowerCase() : "";
             const agentValue = row["Agent"] ? row["Agent"].toString().toLowerCase() : "";
+            const cpValue = row["CP"] ? row["CP"].toString().toLowerCase() : "";
+
             const selectedStatutValue = selectedStatut ? selectedStatut.toString().toLowerCase() : "";
             const selectedAgentValue = selectedAgent ? selectedAgent.toString().toLowerCase() : "";
+            const selectedCPValue = selectedCP ? selectedCP.toString().toLowerCase() : "";
 
             const matchesStatut = selectedStatutValue ? statutValue === selectedStatutValue : true;
             const matchesAgent = selectedAgentValue ? agentValue === selectedAgentValue : true;
+            const matchesCP = selectedCPValue ? cpValue === selectedCPValue : true;
 
-            return matchesStatut && matchesAgent;
+            return matchesStatut && matchesAgent && matchesCP;
         });
-    }, [data, selectedStatut, selectedAgent]);
+    }, [data, selectedStatut, selectedAgent, selectedCP]);
 
 
     const agentList = useMemo(() => {
         const uniqueAgents = new Set(data.map(row => row.Agent).filter(Boolean));
         return Array.from(uniqueAgents);
     }, [data]);
+
+    const cpList = useMemo(() => {
+        const uniqueCPs = new Set(data.map(row => row.CP).filter(Boolean));
+        return Array.from(uniqueCPs);
+    }, [data]);
+
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -136,8 +150,8 @@ const GestionAgent = () => {
                 setSnackbarSeverity('error');
                 setOpenSnackbar(true);
             }
-         } 
-         catch (error) {
+        }
+        catch (error) {
             console.error("Erreur lors de l'ajout:", error);
         }
     };
@@ -316,14 +330,14 @@ const GestionAgent = () => {
     //     const now = new Date();
     //     const currentMonth = now.getMonth(); // 0-indexed (0 = Janvier)
     //     const currentYear = now.getFullYear();
-    
+
     //     // Filtrer les données du mois et année actuels
     //     const filteredData = data.filter(row => {
     //         if (!row.DATE) return false;
     //         const [day, month, year] = row.DATE.split('-').map(Number);
     //         return (month - 1 === currentMonth) && (year === currentYear);
     //     });
-    
+
     //     // Préparer les données pour l'export
     //     const exportData = filteredData.map(row => ({
     //         ID: row.id,
@@ -337,16 +351,16 @@ const GestionAgent = () => {
     //         Agent: row.Agent,
     //         Total: row.Total
     //     }));
-    
+
     //     // Créer un nouveau workbook
     //     const wb = XLSX.utils.book_new();
     //     const ws = XLSX.utils.json_to_sheet(exportData);
     //     XLSX.utils.book_append_sheet(wb, ws, "Agents");
-    
+
     //     // Générer le fichier Excel et le télécharger
     //     XLSX.writeFile(wb, `${fileName}_${now.toISOString().slice(0, 10)}.xlsx`);
     // };
-    
+
 
 
 
@@ -447,6 +461,22 @@ const GestionAgent = () => {
                             <MenuItem value="Annulation à la livraison">Annulation à la livraison</MenuItem>
                             {/* Ajouter d'autres rôles si nécessaire */}
                         </TextField>
+
+                        <TextField
+                            fullWidth
+                            select
+                            label="Code Postal"
+                            value={selectedCP}
+                            onChange={(e) => setSelectedCP(e.target.value)}
+                        >
+                            <MenuItem value="">Tous</MenuItem>
+                            {cpList.map((cp, idx) => (
+                                <MenuItem key={idx} value={cp}>
+                                    {cp}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+
 
                         {/* <TextField
                             fullWidth

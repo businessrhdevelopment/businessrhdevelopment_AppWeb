@@ -60,8 +60,10 @@ const GestionUser = () => {
         setLoading(true);
         setError(null);
         try {
-            const result = await getData("user", user.username);
+            const result = await getData("user", user.username,user.id);
             if (!result) return;
+
+            console.log(result)
 
             setData(result);
 
@@ -237,7 +239,7 @@ const GestionUser = () => {
                                         overflow: "hidden", textOverflow: "ellipsis", maxWidth: "200px",
                                     }}>
                                         <TableRow>
-                                            {["id", "username", "password", "role", "Approved", "action"].map(header => (
+                                            {["id", "username", "password", "role", "Approved","mois" ,"action"].map(header => (
                                                 <TableCell key={header} sx={{ color: "#fff", fontWeight: "bold", position: "sticky", top: 0, backgroundColor: "#000", zIndex: 10 }}>
                                                     {header}
                                                 </TableCell>
@@ -254,6 +256,8 @@ const GestionUser = () => {
                                                 <TableCell>
                                                     <span style={getRoleStyle(row.Approved)}>{row.Approved}</span>
                                                 </TableCell>
+                                                <TableCell >{row.mois}</TableCell>
+
                                                 <TableCell>
                                                     <IconButton
                                                         sx={{ color: "#1976d2" }}

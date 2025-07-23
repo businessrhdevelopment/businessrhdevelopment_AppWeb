@@ -164,6 +164,7 @@ const Dashboard = () => {
                   height: 300,
                   textAlign: "center",
                   zIndex: 100,
+                  marginTop:"5%"
                 }}
               >
                 <h4>{username}</h4>
@@ -220,7 +221,7 @@ const Dashboard = () => {
                 <Box
                   sx={{
                     position: "absolute",
-                    top: "60%",
+                    top: user.role === "admin" ? "68%" : "61%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
                     width: 60,

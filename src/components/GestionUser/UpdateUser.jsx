@@ -51,21 +51,33 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
     const handleCancel = () => {
         setUpdatedData({
             id: "",
-            DATE: "",
-            Nom: "",
-            CP: "",
-            Commande: "",
-            Livraison: "",
-            Statut: "",
-            Commentaire: "",
-            Agent: "",
-            Total: ""
+            username: "",
+            password: "",
+            role: "",
+            Approved: "",
+            mois: ""
         });
         handleClose();
     };
 
     const roleOptions = ["admin", "agent"];
     const approvedOptions = ["yes", "no"];
+
+    const moisOptions = [
+        { value: 1, label: "Janvier" },
+        { value: 2, label: "Février" },
+        { value: 3, label: "Mars" },
+        { value: 4, label: "Avril" },
+        { value: 5, label: "Mai" },
+        { value: 6, label: "Juin" },
+        { value: 7, label: "Juillet" },
+        { value: 8, label: "Août" },
+        { value: 9, label: "Septembre" },
+        { value: 10, label: "Octobre" },
+        { value: 11, label: "Novembre" },
+        { value: 12, label: "Décembre" },
+    ];
+
 
     return (
         <Dialog
@@ -86,66 +98,83 @@ const UpdateUser = ({ open, handleClose, onUpdate, userData }) => {
                         />
                     </Grid>
                     <Grid item>
-                    <TextField
-    fullWidth
-    label="Password"
-    type={showPassword ? "text" : "password"}
-    value={updatedData.password || ""}
-    onChange={(e) => handleChange("password", e.target.value)}
-    variant="outlined"
-    InputProps={{
-        endAdornment: (
-            <InputAdornment position="end">
-                <IconButton
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    edge="end"
-                    aria-label="toggle password visibility"
-                >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-            </InputAdornment>
-        ),
-    }}
-/>
+                        <TextField
+                            fullWidth
+                            label="Password"
+                            type={showPassword ? "text" : "password"}
+                            value={updatedData.password || ""}
+                            onChange={(e) => handleChange("password", e.target.value)}
+                            variant="outlined"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setShowPassword((prev) => !prev)}
+                                            edge="end"
+                                            aria-label="toggle password visibility"
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
 
                     </Grid>
 
-                    
+
 
                     {updatedData.role !== "admin" && (<>
                         <Grid item>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Role"
-                            value={updatedData.role || ""}
-                            onChange={(e) => handleChange("role", e.target.value)}
-                            variant="outlined"
-                        >
-                            {roleOptions.map((role) => (
-                                <MenuItem key={role} value={role}>
-                                    {role}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </Grid>
-                    <Grid item>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Approved"
-                            value={updatedData.Approved || ""}
-                            onChange={(e) => handleChange("Approved", e.target.value)}
-                            variant="outlined"
-                        >
-                            {approvedOptions.map((option) => (
-                                <MenuItem key={option} value={option}>
-                                    {option}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </Grid>
-                    
+                            <TextField
+                                select
+                                fullWidth
+                                label="Role"
+                                value={updatedData.role || ""}
+                                onChange={(e) => handleChange("role", e.target.value)}
+                                variant="outlined"
+                            >
+                                {roleOptions.map((role) => (
+                                    <MenuItem key={role} value={role}>
+                                        {role}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                select
+                                fullWidth
+                                label="Approved"
+                                value={updatedData.Approved || ""}
+                                onChange={(e) => handleChange("Approved", e.target.value)}
+                                variant="outlined"
+                            >
+                                {approvedOptions.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                select
+                                fullWidth
+                                label="Mois"
+                                value={updatedData.mois || ""}
+                                onChange={(e) => handleChange("mois", e.target.value)}
+                                variant="outlined"
+                            >
+                                {moisOptions.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+
+
                     </>)}
 
                 </Grid>
