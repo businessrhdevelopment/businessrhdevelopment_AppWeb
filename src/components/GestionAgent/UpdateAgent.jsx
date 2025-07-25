@@ -166,6 +166,8 @@ const UpdateAgent = ({ open, handleClose, agentData, onUpdate }) => {
                         <MenuItem value="Livraison">Livraison</MenuItem>
                         <MenuItem value="Livrée">Livrée</MenuItem>
                         <MenuItem value="Annulation à la livraison">Annulation à la livraison</MenuItem>
+                        <MenuItem value="Injoignable à la livraison">Injoignable à la livraison</MenuItem>
+                        
                     </TextField>
                     <TextField
                         name="Commentaire"

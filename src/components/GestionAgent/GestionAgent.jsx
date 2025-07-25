@@ -459,6 +459,8 @@ const GestionAgent = () => {
                             <MenuItem value="Livraison">Livraison</MenuItem>
                             <MenuItem value="Livrée">Livrée </MenuItem>
                             <MenuItem value="Annulation à la livraison">Annulation à la livraison</MenuItem>
+                            <MenuItem value="Injoignable à la livraison">Injoignable à la livraison</MenuItem>
+                            
                             {/* Ajouter d'autres rôles si nécessaire */}
                         </TextField>
 
@@ -658,10 +660,14 @@ const getStatusStyle = (status) => {
             return { backgroundColor: "#D1FADF", color: "#18794E", padding: "4px 10px", borderRadius: "10px" };
         case "Annulation à la livraison":
             return { backgroundColor: "#FFE4E4", color: "#B42318", padding: "4px 10px", borderRadius: "10px" };
+        case "Injoignable à la livraison":
+            return { backgroundColor: "#E0D7FF", color: "#6941C6", padding: "4px 10px", borderRadius: "10px" };
         default:
             return {};
     }
 };
+
+
 
 // const filteredData = useMemo(() => {
 //     return data.filter((row) => {

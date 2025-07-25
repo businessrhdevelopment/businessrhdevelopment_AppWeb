@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const taskStatesFixed = ["Conf KO", "Injoignable", "Livraison", "Livrée", "Annulation à la livraison"];
+const taskStatesFixed = ["Conf KO", "Injoignable", "Livraison", "Livrée", "Annulation à la livraison","Injoignable à la livraison"];
 const backgroundColors = ["red", "#FAAD14", "#1890FF", "#18794E", "#B42318"];
 const hoverColors = ["red", "#FAAD14", "#1890FF", "#18794E", "#B42318"];
 

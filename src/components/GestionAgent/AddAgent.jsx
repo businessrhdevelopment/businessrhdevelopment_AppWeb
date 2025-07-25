@@ -30,7 +30,7 @@ const AddAgent = ({ open, handleClose, onAdd }) => {
     });
 
     const [agentOptions, setAgentOptions] = useState([]);
-    const statutOptions = ["Conf KO", "Injoignable", "Livraison", "Livrée", "Annulation à la livraison"];
+    const statutOptions = ["Conf KO", "Injoignable", "Livraison", "Livrée", "Annulation à la livraison","Injoignable à la livraison"];
     const [loading, setLoading] = useState(false);
 
         const user = useSelector(state => state.user.user)
